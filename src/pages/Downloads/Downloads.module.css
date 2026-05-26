@@ -1,0 +1,26 @@
+.page {
+  padding: 16px;
+  padding-bottom: calc(var(--bottom-nav-height) + 24px);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.itemWrap {
+  opacity: 0;
+  animation: fadeSlideIn 0.45s ease forwards;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,47 @@
+.appBar {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  background-color: #1B5E20;
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 110;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 8px;
+  margin-right: 8px;
+  margin-left: -8px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.backButton:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.backButton:active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.title {
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

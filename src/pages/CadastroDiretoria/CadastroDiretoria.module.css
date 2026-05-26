@@ -1,0 +1,114 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px;
+  background-color: #F5F5F5;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+.title {
+  color: #1B5E20;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.formCard {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333333;
+}
+
+.input, .select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #CCCCCC;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+  background-color: #FFFFFF;
+}
+
+.input:focus, .select:focus {
+  outline: none;
+  border-color: #388E3C;
+  box-shadow: 0 0 0 2px rgba(56, 142, 60, 0.2);
+}
+
+.checkboxGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #333333;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #1B5E20;
+}
+
+.submitBtn {
+  background-color: #1B5E20;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 8px;
+}
+
+.submitBtn:hover {
+  background-color: #388E3C;
+}
+
+.submitBtn:active {
+  background-color: #1B5E20;
+}
+
+.backBtn {
+  background-color: transparent;
+  color: #666666;
+  border: 1px solid #CCCCCC;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+  text-decoration: none;
+  margin-top: 4px;
+}
+
+.backBtn:hover {
+  background-color: #EEEEEE;
+  color: #333333;
+}
+

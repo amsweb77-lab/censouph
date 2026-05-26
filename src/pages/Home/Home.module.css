@@ -1,0 +1,130 @@
+.page {
+  padding: 16px;
+  padding-bottom: calc(var(--bottom-nav-height) + 24px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ====== Logo Bar ====== */
+.logoBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid #E0E0E0;
+}
+
+.logoImage {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* ====== Banner Carousel ====== */
+.bannerSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.bannerTrack {
+  width: 100%;
+  position: relative;
+  height: 140px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.banner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 28px;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  cursor: pointer;
+}
+
+.bannerActive {
+  opacity: 1;
+}
+
+.bannerText {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text-on-dark);
+  text-align: center;
+  line-height: 1.35;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--color-text-secondary);
+  opacity: 0.35;
+  transition: all var(--transition-base);
+  cursor: pointer;
+  padding: 0;
+}
+
+.dotActive {
+  opacity: 1;
+  background: var(--color-primary);
+  width: 24px;
+  border-radius: 4px;
+}
+
+/* ====== Section ====== */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sectionTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+/* ====== Stats Row ====== */
+.statsRow {
+  display: flex;
+  gap: 8px;
+}
+
+/* ====== News Horizontal Scroll ====== */
+.newsScroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+  margin: 0 -16px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.newsScroll::-webkit-scrollbar {
+  height: 0;
+  display: none;
+}
+
+.newsScroll > * {
+  scroll-snap-align: start;
+}
