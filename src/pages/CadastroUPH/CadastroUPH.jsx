@@ -8,7 +8,8 @@ export default function CadastroUPH() {
   const [formData, setFormData] = useState({
     federacao_id: '',
     nomeIgreja: '',
-    numeroSocios: ''
+    numeroSocios: '',
+    situacao: 'ativa'
   });
   const [federacoes, setFederacoes] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -34,7 +35,8 @@ export default function CadastroUPH() {
     const { error: insertError } = await supabase.from('uphs').insert({
       federacao_id: formData.federacao_id,
       nome_igreja: formData.nomeIgreja,
-      numero_socios: parseInt(formData.numeroSocios, 10)
+      numero_socios: parseInt(formData.numeroSocios, 10),
+      situacao: formData.situacao
     });
 
     setLoading(false);
@@ -45,7 +47,7 @@ export default function CadastroUPH() {
     }
 
     alert('Cadastrado com sucesso');
-    setFormData({ federacao_id: '', nomeIgreja: '', numeroSocios: '' });
+    setFormData({ federacao_id: '', nomeIgreja: '', numeroSocios: '', situacao: 'ativa' });
   };
 
   return (
@@ -97,6 +99,21 @@ export default function CadastroUPH() {
             min="0"
             required
           />
+        </div>
+
+        <div className={styles.inputGroup}>
+          <label className={styles.label} htmlFor="situacao">Situação</label>
+          <select 
+            id="situacao" 
+            name="situacao" 
+            className={styles.select} 
+            value={formData.situacao} 
+            onChange={handleChange} 
+            required
+          >
+            <option value="ativa">Ativa</option>
+            <option value="inativa">Inativa</option>
+          </select>
         </div>
 
         <button type="submit" className={styles.submitBtn} disabled={loading}>

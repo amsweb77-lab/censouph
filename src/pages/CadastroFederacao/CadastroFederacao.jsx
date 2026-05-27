@@ -15,7 +15,8 @@ export default function CadastroFederacao() {
     sinodal_id: '',
     estado: '',
     nome: '',
-    sigla: ''
+    sigla: '',
+    situacao: 'ativa'
   });
   const [sinodais, setSinodais] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -42,7 +43,8 @@ export default function CadastroFederacao() {
       sinodal_id: formData.sinodal_id,
       estado: formData.estado,
       nome: formData.nome,
-      sigla: formData.sigla
+      sigla: formData.sigla,
+      situacao: formData.situacao
     });
 
     setLoading(false);
@@ -53,7 +55,7 @@ export default function CadastroFederacao() {
     }
 
     alert('Cadastrado com sucesso');
-    setFormData({ sinodal_id: '', estado: '', nome: '', sigla: '' });
+    setFormData({ sinodal_id: '', estado: '', nome: '', sigla: '', situacao: 'ativa' });
   };
 
   return (
@@ -119,6 +121,21 @@ export default function CadastroFederacao() {
             placeholder="Ex: FES"
             required
           />
+        </div>
+
+        <div className={styles.inputGroup}>
+          <label className={styles.label} htmlFor="situacao">Situação</label>
+          <select 
+            id="situacao" 
+            name="situacao" 
+            className={styles.select} 
+            value={formData.situacao} 
+            onChange={handleChange} 
+            required
+          >
+            <option value="ativa">Ativa</option>
+            <option value="inativa">Inativa</option>
+          </select>
         </div>
 
         <button type="submit" className={styles.submitBtn} disabled={loading}>

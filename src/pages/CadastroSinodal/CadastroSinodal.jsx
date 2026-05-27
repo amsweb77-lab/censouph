@@ -8,7 +8,8 @@ export default function CadastroSinodal() {
   const [formData, setFormData] = useState({
     regiao_id: '',
     nome: '',
-    sigla: ''
+    sigla: '',
+    situacao: 'ativa'
   });
   const [regioes, setRegioes] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -34,7 +35,8 @@ export default function CadastroSinodal() {
     const { error: insertError } = await supabase.from('sinodais').insert({
       regiao_id: formData.regiao_id,
       nome: formData.nome,
-      sigla: formData.sigla
+      sigla: formData.sigla,
+      situacao: formData.situacao
     });
 
     setLoading(false);
@@ -45,7 +47,7 @@ export default function CadastroSinodal() {
     }
 
     alert('Cadastrado com sucesso');
-    setFormData({ regiao_id: '', nome: '', sigla: '' });
+    setFormData({ regiao_id: '', nome: '', sigla: '', situacao: 'ativa' });
   };
 
   return (
@@ -96,6 +98,21 @@ export default function CadastroSinodal() {
             placeholder="Ex: CSS"
             required
           />
+        </div>
+
+        <div className={styles.inputGroup}>
+          <label className={styles.label} htmlFor="situacao">Situação</label>
+          <select 
+            id="situacao" 
+            name="situacao" 
+            className={styles.select} 
+            value={formData.situacao} 
+            onChange={handleChange} 
+            required
+          >
+            <option value="ativa">Ativa</option>
+            <option value="inativa">Inativa</option>
+          </select>
         </div>
 
         <button type="submit" className={styles.submitBtn} disabled={loading}>
