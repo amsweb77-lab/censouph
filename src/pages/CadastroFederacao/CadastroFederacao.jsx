@@ -104,7 +104,7 @@ export default function CadastroFederacao() {
             className={styles.input} 
             value={formData.nome} 
             onChange={handleChange} 
-            placeholder="Ex: Federação Central"
+            placeholder="Ex: São Luis"
             required
           />
         </div>
