@@ -14,7 +14,10 @@ function AppBar({ title, showBack = false, onBack }) {
           <MdArrowBack size={24} />
         </button>
       )}
-      <h1 className={styles.title}>{title}</h1>
+      <div className={styles.titleContainer}>
+        <img src="/logo.png" alt="Logo UPH" className={styles.logo} />
+        <h1 className={styles.title}>{title}</h1>
+      </div>
     </header>
   );
 }

@@ -5,6 +5,7 @@
   justify-content: center;
   text-align: center;
   min-width: 80px;
+  flex: 1 1 80px;
   padding: 12px 16px;
   border-radius: 12px;
   color: #ffffff;

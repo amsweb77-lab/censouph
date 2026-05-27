@@ -23,14 +23,25 @@ export default function ConsultarUPHs() {
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Load regions on mount
   useEffect(() => {
     async function loadRegioes() {
       try {
-        const { data, error } = await supabase.from('regioes').select('*').order('nome');
+        const { data, error } = await supabase.from('regioes').select('*');
         if (error) throw error;
-        setRegioes(data || []);
+        if (data) {
+          const customOrder = ['Norte I', 'Norte II', 'Nordeste', 'Centro-Oeste', 'Sul', 'Sudeste I', 'Sudeste II'];
+          const sorted = [...data].sort((a, b) => {
+            const indexA = customOrder.indexOf(a.nome);
+            const indexB = customOrder.indexOf(b.nome);
+            return (indexA === -1 ? 99 : indexA) - (indexB === -1 ? 99 : indexB);
+          });
+          setRegioes(sorted);
+        } else {
+          setRegioes([]);
+        }
       } catch (err) {
         console.error('Erro ao carregar regiões:', err);
       }
@@ -134,6 +145,7 @@ export default function ConsultarUPHs() {
       setStep('uphs_list');
     } else if (step === 'uphs_list') {
       setStep('regions');
+      setSearchTerm('');
     } else {
       navigate(-1);
     }
@@ -197,20 +209,36 @@ export default function ConsultarUPHs() {
             ) : uphs.length === 0 ? (
               <p className={styles.empty}>Nenhuma UPH cadastrada para esta região.</p>
             ) : (
-              <div className={styles.itemsList}>
-                {uphs.map((item) => (
-                  <button 
-                    key={item.id} 
-                    className={`${styles.listItem} ${item.situacao === 'inativa' ? styles.listItemInactive : ''}`}
-                    onClick={() => handleSelectUph(item)}
-                  >
-                    <span className={styles.listItemName}>
-                      {item.nome_igreja}
-                    </span>
-                    <MdChevronRight size={24} className={styles.chevron} />
-                  </button>
-                ))}
-              </div>
+              <>
+                <div className={styles.searchBarContainer}>
+                  <input
+                    type="text"
+                    className={styles.searchInput}
+                    placeholder="Pesquisar por igreja..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+
+                <div className={styles.itemsList}>
+                  {uphs
+                    .filter((item) =>
+                      (item.nome_igreja || '').toLowerCase().includes(searchTerm.toLowerCase())
+                    )
+                    .map((item) => (
+                      <button 
+                        key={item.id} 
+                        className={`${styles.listItem} ${item.situacao === 'inativa' ? styles.listItemInactive : ''}`}
+                        onClick={() => handleSelectUph(item)}
+                      >
+                        <span className={styles.listItemName}>
+                          {item.nome_igreja}
+                        </span>
+                        <MdChevronRight size={24} className={styles.chevron} />
+                      </button>
+                    ))}
+                </div>
+              </>
             )}
           </>
         )}

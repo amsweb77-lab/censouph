@@ -18,7 +18,15 @@ export default function CadastroSinodal() {
   useEffect(() => {
     async function fetchRegioes() {
       const { data } = await supabase.from('regioes').select('id, nome');
-      if (data) setRegioes(data);
+      if (data) {
+        const customOrder = ['Norte I', 'Norte II', 'Nordeste', 'Centro-Oeste', 'Sul', 'Sudeste I', 'Sudeste II'];
+        const sorted = [...data].sort((a, b) => {
+          const indexA = customOrder.indexOf(a.nome);
+          const indexB = customOrder.indexOf(b.nome);
+          return (indexA === -1 ? 99 : indexA) - (indexB === -1 ? 99 : indexB);
+        });
+        setRegioes(sorted);
+      }
     }
     fetchRegioes();
   }, []);

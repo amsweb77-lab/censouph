@@ -4,7 +4,17 @@ import styles from './CadastroDiretoria.module.css';
 import { supabase } from '../../lib/supabaseClient';
 
 const tiposDiretoria = ['UPH', 'Federação', 'Sinodal'];
-const cargos = ['Presidente', 'Vice-Presidente', 'Secretário', 'Tesoureiro'];
+const cargos = [
+  'Presidente', 
+  'Vice-Presidente', 
+  'Secretário Executivo', 
+  '1º Secretário', 
+  '2º Secretário', 
+  'Tesoureiro', 
+  'Conselheiro', 
+  'Sec. Presbiterial', 
+  'Sec. Sinodal'
+];
 const oficios = ['Presbítero', 'Diácono', 'Reverendo', 'Não-Oficial'];
 
 export default function CadastroDiretoria() {
@@ -25,6 +35,7 @@ export default function CadastroDiretoria() {
   const [entidadesOptions, setEntidadesOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [fotoFile, setFotoFile] = useState(null);
 
   useEffect(() => {
     async function fetchEntidades() {
@@ -55,6 +66,33 @@ export default function CadastroDiretoria() {
     fetchEntidades();
   }, [formData.tipoDiretoria]);
 
+  // Business rule: automatically reset cargo if type changes and current cargo is not allowed in the new type
+  useEffect(() => {
+    if (formData.tipoDiretoria && formData.cargo) {
+      const allowed = getFilteredCargos();
+      if (!allowed.includes(formData.cargo)) {
+        setFormData(prev => ({ ...prev, cargo: '' }));
+      }
+    }
+  }, [formData.tipoDiretoria, formData.cargo]);
+
+  const getFilteredCargos = () => {
+    if (formData.tipoDiretoria === 'UPH') {
+      return ['Presidente', 'Vice-Presidente', '1º Secretário', '2º Secretário', 'Tesoureiro', 'Conselheiro'];
+    }
+    if (formData.tipoDiretoria === 'Federação') {
+      return ['Presidente', 'Vice-Presidente', 'Secretário Executivo', '1º Secretário', '2º Secretário', 'Tesoureiro', 'Sec. Presbiterial'];
+    }
+    if (formData.tipoDiretoria === 'Sinodal') {
+      return ['Presidente', 'Vice-Presidente', 'Secretário Executivo', '1º Secretário', '2º Secretário', 'Tesoureiro', 'Sec. Sinodal'];
+    }
+    return cargos;
+  };
+
+  const handleFileChange = (e) => {
+    setFotoFile(e.target.files[0]);
+  };
+
   const handleChange = (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     const name = e.target.name;
@@ -81,6 +119,32 @@ export default function CadastroDiretoria() {
     };
     const mappedTipo = typeMapping[formData.tipoDiretoria];
 
+    let uploadedFotoUrl = null;
+
+    // 1. Upload photo to Supabase Storage if selected
+    if (fotoFile) {
+      try {
+        const fileExt = fotoFile.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `membros/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('diretoria')
+          .upload(filePath, fotoFile);
+
+        if (uploadError) {
+          console.warn('Storage bucket directory may not exist, trying to upload:', uploadError.message);
+          // Proceed anyway or throw
+        } else {
+          const { data } = supabase.storage.from('diretoria').getPublicUrl(filePath);
+          uploadedFotoUrl = data?.publicUrl || null;
+        }
+      } catch (uploadErr) {
+        console.error('File upload process failed:', uploadErr);
+      }
+    }
+
+    // 2. Insert record
     const { error: insertError } = await supabase.from('membros_diretoria').insert({
       tipo_entidade: mappedTipo,
       entidade_id: formData.entidade_id,
@@ -93,7 +157,7 @@ export default function CadastroDiretoria() {
       whatsapp: formData.whatsapp,
       email: formData.email,
       data_nascimento: formData.nascimento,
-      foto_url: null
+      foto_url: uploadedFotoUrl
     });
 
     setLoading(false);
@@ -104,6 +168,11 @@ export default function CadastroDiretoria() {
     }
 
     alert('Cadastrado com sucesso');
+    setFotoFile(null);
+    // Reset file input element
+    const fileInput = document.getElementById('foto');
+    if (fileInput) fileInput.value = '';
+
     setFormData({
       tipoDiretoria: '', entidade_id: '', cargo: '', anoInicio: '', anoFim: '', 
       oficio: '', nome: '', telefone: '', whatsapp: false, email: '', nascimento: ''
@@ -137,7 +206,7 @@ export default function CadastroDiretoria() {
           <label className={styles.label} htmlFor="cargo">Cargo</label>
           <select id="cargo" name="cargo" className={styles.select} value={formData.cargo} onChange={handleChange} required>
             <option value="">Selecione o cargo</option>
-            {cargos.map(c => <option key={c} value={c}>{c}</option>)}
+            {getFilteredCargos().map(c => <option key={c} value={c}>{c}</option>)}
           </select>
         </div>
 
@@ -183,6 +252,11 @@ export default function CadastroDiretoria() {
         <div className={styles.inputGroup}>
           <label className={styles.label} htmlFor="nascimento">Data de Nascimento</label>
           <input type="date" id="nascimento" name="nascimento" className={styles.input} value={formData.nascimento} onChange={handleChange} required />
+        </div>
+
+        <div className={styles.inputGroup}>
+          <label className={styles.label} htmlFor="foto">Foto do Membro (Opcional)</label>
+          <input type="file" id="foto" name="foto" accept="image/*" className={styles.input} onChange={handleFileChange} style={{ paddingTop: '8px' }} />
         </div>
 
         <button type="submit" className={styles.submitBtn} disabled={loading}>

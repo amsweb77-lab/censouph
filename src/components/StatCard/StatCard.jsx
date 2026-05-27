@@ -5,6 +5,7 @@ const variantColors = {
   medium: '#388E3C',
   olive: '#558B2F',
   green: '#4CAF50',
+  inactive: '#78909C',
 };
 
 function StatCard({ label, value, variant = 'dark', onClick }) {

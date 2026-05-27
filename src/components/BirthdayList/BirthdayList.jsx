@@ -1,4 +1,5 @@
-import { MdPerson, MdPhone } from 'react-icons/md'
+import { MdPerson } from 'react-icons/md'
+import { FaWhatsapp } from 'react-icons/fa'
 import styles from './BirthdayList.module.css'
 
 export default function BirthdayList({ membros }) {
@@ -10,17 +11,13 @@ export default function BirthdayList({ membros }) {
     )
   }
 
-  // Função para calcular a idade
-  const calcularIdade = (dataNascimento) => {
+  // Função para obter o dia do aniversário
+  const obterDiaAniversario = (dataNascimento) => {
     if (!dataNascimento) return ''
-    const hoje = new Date()
-    const nascimento = new Date(dataNascimento)
-    let idade = hoje.getFullYear() - nascimento.getFullYear()
-    const m = hoje.getMonth() - nascimento.getMonth()
-    if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) {
-      idade--
-    }
-    return `${idade} anos`
+    const parts = dataNascimento.split('-')
+    if (parts.length < 3) return ''
+    const dia = parseInt(parts[2], 10)
+    return `Dia ${dia}`
   }
 
   return (
@@ -37,18 +34,21 @@ export default function BirthdayList({ membros }) {
           
           <div className={styles.info}>
             <div className={styles.name}>{membro.nome}</div>
-            <div className={styles.age}>{calcularIdade(membro.data_nascimento)}</div>
+            {membro.cargo && (
+              <span className={styles.cargoBadge}>{membro.cargo}</span>
+            )}
+            <div className={styles.age}>{membro.telefone || 'Sem telefone'}</div>
           </div>
 
           {membro.telefone && (
             <a 
-              href={membro.whatsapp ? `https://wa.me/55${membro.telefone.replace(/\D/g,'')}` : `tel:${membro.telefone.replace(/\D/g,'')}`} 
+              href={membro.whatsapp ? `https://wa.me/55${membro.telefone.replace(/\D/g,'')}` : `https://wa.me/55${membro.telefone.replace(/\D/g,'')}`} 
               className={styles.callButton}
               target="_blank"
               rel="noopener noreferrer"
               style={{ borderRadius: '20px 8px 20px 8px' }}
             >
-              <MdPhone size={20} />
+              <FaWhatsapp size={22} />
             </a>
           )}
         </div>

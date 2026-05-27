@@ -15,6 +15,12 @@
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.2);
 }
 
+@media (min-width: 768px) {
+  .bottomNav {
+    display: none !important;
+  }
+}
+
 .tab {
   display: flex;
   flex-direction: column;

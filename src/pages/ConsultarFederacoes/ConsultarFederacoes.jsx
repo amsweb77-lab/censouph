@@ -24,14 +24,25 @@ export default function ConsultarFederacoes() {
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Load regions on mount
   useEffect(() => {
     async function loadRegioes() {
       try {
-        const { data, error } = await supabase.from('regioes').select('*').order('nome');
+        const { data, error } = await supabase.from('regioes').select('*');
         if (error) throw error;
-        setRegioes(data || []);
+        if (data) {
+          const customOrder = ['Norte I', 'Norte II', 'Nordeste', 'Centro-Oeste', 'Sul', 'Sudeste I', 'Sudeste II'];
+          const sorted = [...data].sort((a, b) => {
+            const indexA = customOrder.indexOf(a.nome);
+            const indexB = customOrder.indexOf(b.nome);
+            return (indexA === -1 ? 99 : indexA) - (indexB === -1 ? 99 : indexB);
+          });
+          setRegioes(sorted);
+        } else {
+          setRegioes([]);
+        }
       } catch (err) {
         console.error('Erro ao carregar regiões:', err);
       }
@@ -153,6 +164,7 @@ export default function ConsultarFederacoes() {
       setStep('federacoes_list');
     } else if (step === 'federacoes_list') {
       setStep('regions');
+      setSearchTerm('');
     } else {
       navigate(-1);
     }
@@ -220,20 +232,38 @@ export default function ConsultarFederacoes() {
             ) : federacoes.length === 0 ? (
               <p className={styles.empty}>Nenhuma Federação cadastrada para esta região.</p>
             ) : (
-              <div className={styles.itemsList}>
-                {federacoes.map((item) => (
-                  <button 
-                    key={item.id} 
-                    className={`${styles.listItem} ${item.situacao === 'inativa' ? styles.listItemInactive : ''}`}
-                    onClick={() => handleSelectFederacao(item)}
-                  >
-                    <span className={styles.listItemName}>
-                      <strong>{item.sigla}</strong> - {item.nome}
-                    </span>
-                    <MdChevronRight size={24} className={styles.chevron} />
-                  </button>
-                ))}
-              </div>
+              <>
+                <div className={styles.searchBarContainer}>
+                  <input
+                    type="text"
+                    className={styles.searchInput}
+                    placeholder="Pesquisar por nome ou sigla..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+
+                <div className={styles.itemsList}>
+                  {federacoes
+                    .filter(
+                      (item) =>
+                        (item.nome || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        (item.sigla || '').toLowerCase().includes(searchTerm.toLowerCase())
+                    )
+                    .map((item) => (
+                      <button 
+                        key={item.id} 
+                        className={`${styles.listItem} ${item.situacao === 'inativa' ? styles.listItemInactive : ''}`}
+                        onClick={() => handleSelectFederacao(item)}
+                      >
+                        <span className={styles.listItemName}>
+                          <strong>{item.sigla}</strong> - {item.nome}
+                        </span>
+                        <MdChevronRight size={24} className={styles.chevron} />
+                      </button>
+                    ))}
+                </div>
+              </>
             )}
           </>
         )}

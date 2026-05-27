@@ -19,7 +19,30 @@ export default function CNHP() {
           .eq('tipo_entidade', 'nacional');
 
         if (fetchError) throw fetchError;
-        setMembros(data || []);
+        
+        const cargoOrder = [
+          'Presidente',
+          'Vice-Presidente Norte I',
+          'Vice-Presidente Norte II',
+          'Vice-Presidente Nordeste',
+          'Vice-Presidente Centro-Oeste',
+          'Vice-Presidente Sul',
+          'Vice-Presidente Sudeste I',
+          'Vice-Presidente Sudeste II',
+          'Secretário Executivo',
+          'Primeiro Secretário',
+          'Segundo Secretário',
+          'Tesoureiro',
+          'Secretário Nacional'
+        ];
+
+        const sorted = (data || []).sort((a, b) => {
+          const indexA = cargoOrder.indexOf(a.cargo);
+          const indexB = cargoOrder.indexOf(b.cargo);
+          return (indexA === -1 ? 99 : indexA) - (indexB === -1 ? 99 : indexB);
+        });
+
+        setMembros(sorted);
       } catch (err) {
         console.error('Error fetching CNHP members:', err);
         setError(err.message);
@@ -36,7 +59,7 @@ export default function CNHP() {
       <header className={styles.header}>
         <h1 className={styles.title}>Diretoria da CNHP</h1>
         <p className={styles.subtitle}>Confederação Nacional de Homens Presbiterianos</p>
-        <p className={styles.mandato}>Mandato 2022 - 2026</p>
+        <p className={styles.mandato}>Mandato 2026 - 2030</p>
       </header>
 
       {loading ? (
@@ -57,6 +80,7 @@ export default function CNHP() {
                 telefone={membro.telefone}
                 email={membro.email}
                 foto={membro.foto_url || membro.foto}
+                dataNascimento={membro.data_nascimento}
               />
             </div>
           ))}

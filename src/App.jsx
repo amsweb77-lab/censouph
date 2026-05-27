@@ -16,6 +16,10 @@ import CadastroDiretoria from './pages/CadastroDiretoria/CadastroDiretoria'
 import ConsultarSinodais from './pages/ConsultarSinodais/ConsultarSinodais'
 import ConsultarFederacoes from './pages/ConsultarFederacoes/ConsultarFederacoes'
 import ConsultarUPHs from './pages/ConsultarUPHs/ConsultarUPHs'
+import Tesouraria from './pages/Tesouraria/Tesouraria'
+
+
+import Sidebar from './components/Sidebar/Sidebar'
 
 
 const pageTitles = {
@@ -23,7 +27,9 @@ const pageTitles = {
   '/cnhp': 'CNHP',
   '/noticias': 'Notícias da UPH',
   '/downloads': 'Materiais para download',
-  '/menu': 'Menu',
+  '/menu': 'Estatística',
+  '/formularios': 'Formulários',
+  '/tesouraria': 'Tesouraria',
   '/login': 'Login',
   '/cadastro-usuario': 'Cadastro de Usuário',
   '/cadastrar-sinodais': 'Cadastro de Sinodais',
@@ -42,6 +48,7 @@ function App() {
 
   return (
     <>
+      <Sidebar />
       <AppBar title={currentTitle} showBack={false} />
       <main style={{
         paddingTop: 'var(--appbar-height)',
@@ -54,6 +61,8 @@ function App() {
           <Route path="/noticias" element={<Noticias />} />
           <Route path="/downloads" element={<Downloads />} />
           <Route path="/menu" element={<Menu />} />
+          <Route path="/formularios" element={<Downloads />} />
+          <Route path="/tesouraria" element={<Tesouraria />} />
           <Route path="/login" element={<Login />} />
           <Route path="/cadastro-usuario" element={<CadastroUsuario />} />
           

@@ -96,12 +96,43 @@ body {
 }
 
 #root {
-  max-width: var(--max-width);
+  max-width: 100%;
   margin: 0 auto;
   background-color: var(--color-bg);
   min-height: 100dvh;
   position: relative;
   overflow-x: hidden;
+  transition: max-width var(--transition-base);
+}
+
+@media (min-width: 768px) {
+  #root {
+    max-width: 100% !important;
+    margin: 0 !important;
+    display: flex;
+    flex-direction: row;
+    overflow-x: visible;
+  }
+  
+  body {
+    background-color: var(--color-bg) !important;
+  }
+  
+  main {
+    padding-top: 24px !important;
+    padding-bottom: 24px !important;
+    flex: 1;
+    height: 100vh;
+    overflow-y: auto;
+    background-color: var(--color-bg);
+    padding: 24px 32px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  main {
+    padding: 32px 40px !important;
+  }
 }
 
 a {

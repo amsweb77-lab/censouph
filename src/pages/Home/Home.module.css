@@ -6,6 +6,28 @@
   gap: 20px;
 }
 
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sideContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (min-width: 1024px) {
+  .page {
+    display: grid;
+    grid-template-columns: 2.2fr 1fr;
+    gap: 32px;
+    align-items: start;
+    padding: 0 !important;
+  }
+}
+
 /* ====== Logo Bar ====== */
 .logoBar {
   display: flex;
@@ -104,6 +126,7 @@
 /* ====== Stats Row ====== */
 .statsRow {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
@@ -127,4 +150,213 @@
 
 .newsScroll > * {
   scroll-snap-align: start;
+}
+
+/* ====== Regions Grid ====== */
+.regionsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.regionBtn {
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 18px 16px;
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+  position: relative;
+  overflow: hidden;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.regionBtn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.regionBtn:active {
+  transform: translateY(-1px);
+}
+
+/* Modal overlay styling */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.25s ease-out;
+}
+
+.modalContent {
+  background-color: #FFFFFF;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 460px;
+  max-height: 80vh;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modalHeader {
+  background-color: #004D40;
+  color: #FFFFFF;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalTitle {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.modalClose {
+  background: transparent;
+  border: none;
+  color: #FFFFFF;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.modalClose:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.modalBody {
+  padding: 16px 20px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modalItem {
+  background-color: #F9F9F9;
+  border: 1px solid #EEEEEE;
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.modalItemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalItemTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #333333;
+}
+
+.modalItemBadge {
+  font-size: 11px;
+  font-weight: 600;
+  background-color: #E8F5E9;
+  color: #2E7D32;
+  padding: 3px 8px;
+  border-radius: 12px;
+  border: 1px solid #C8E6C9;
+}
+
+.modalItemSubtitle {
+  font-size: 13px;
+  color: #666666;
+}
+
+/* ====== Modal Search Bar ====== */
+.modalSearchContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: #F5F5F5;
+  border-bottom: 1px solid #EEEEEE;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.modalSearchIcon {
+  font-size: 16px;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.modalSearchInput {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  color: #333333;
+  outline: none;
+  padding: 2px 0;
+}
+
+.modalSearchInput::placeholder {
+  color: #AAAAAA;
+}
+
+.modalSearchClear {
+  background: none;
+  border: none;
+  color: #999999;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, background 0.2s;
+  flex-shrink: 0;
+}
+
+.modalSearchClear:hover {
+  color: #333333;
+  background-color: #E0E0E0;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

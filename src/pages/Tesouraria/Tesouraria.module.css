@@ -1,0 +1,226 @@
+.page {
+  background-color: #F5F5F5;
+  min-height: calc(100vh - var(--appbar-height) - var(--bottom-nav-height));
+  font-family: 'Inter', sans-serif;
+  padding-bottom: 40px;
+}
+
+.banner {
+  background-color: #004D40;
+  color: #FFFFFF;
+  padding: 24px 16px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.bannerTitle {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+.container {
+  padding: 24px 16px;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.textBlock {
+  background-color: #FFFFFF;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  border: 1px solid #E8F5E9;
+  line-height: 1.6;
+  color: #333333;
+  font-size: 15px;
+}
+
+.textBlock p {
+  margin: 0 0 12px 0;
+}
+
+.textBlock p:last-child {
+  margin-bottom: 0;
+}
+
+.highlightText {
+  color: #004D40;
+  font-weight: 700;
+}
+
+/* Premium Bank Details Card */
+.bankCard {
+  background: linear-gradient(135deg, #004D40 0%, #00796B 100%);
+  border-radius: 20px;
+  padding: 24px;
+  color: #FFFFFF;
+  box-shadow: 0 8px 24px rgba(0, 77, 64, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bankCard::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+
+.bankCardTitle {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 8px;
+  margin: 0;
+  color: #A5D6A7;
+}
+
+.bankDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+}
+
+.detailLabel {
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.detailValue {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+}
+
+.copyBtn {
+  background-color: #FFFFFF;
+  color: #004D40;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.copyBtn:active {
+  transform: scale(0.97);
+}
+
+.copyBtnSuccess {
+  background-color: #4CAF50;
+  color: #FFFFFF;
+}
+
+/* Receipt Instructions & Contacts */
+.contactsCard {
+  background-color: #FFFFFF;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  border: 1px solid #E8F5E9;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contactsTitle {
+  color: #004D40;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.contactButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.contactLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  border: 1px solid #CCCCCC;
+}
+
+.emailLink {
+  background-color: #F5F5F5;
+  color: #333333;
+  border-color: #E0E0E0;
+}
+
+.emailLink:hover {
+  background-color: #EEEEEE;
+}
+
+.whatsappLink {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+  border-color: #C8E6C9;
+}
+
+.whatsappLink:hover {
+  background-color: #C8E6C9;
+}
+
+/* Alert Box */
+.alertBox {
+  background-color: #FFF3E0;
+  border-left: 4px solid #FF9800;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.alertIcon {
+  color: #FF9800;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.alertText {
+  color: #E65100;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 0;
+}

@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { MdHome, MdGroups, MdNewspaper, MdDownload, MdMenu } from 'react-icons/md';
+import { MdHome, MdGroups, MdNewspaper, MdDownload, MdBarChart } from 'react-icons/md';
 import styles from './BottomNav.module.css';
 
 const tabs = [
@@ -7,7 +7,7 @@ const tabs = [
   { label: 'CNHP', icon: MdGroups, path: '/cnhp' },
   { label: 'Notícias', icon: MdNewspaper, path: '/noticias' },
   { label: 'Downloads', icon: MdDownload, path: '/downloads' },
-  { label: 'Menu', icon: MdMenu, path: '/menu' },
+  { label: 'Estatística', icon: MdBarChart, path: '/menu' },
 ];
 
 function BottomNav() {

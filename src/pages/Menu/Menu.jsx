@@ -48,6 +48,7 @@ export default function Menu() {
                   label={item.label}
                   path={item.path}
                   onClick={() => navigate(item.path)}
+                  disabled={item.disabled}
                 />
               </div>
             ))}
