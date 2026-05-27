@@ -256,7 +256,7 @@ export default function ConsultarSinodais() {
                 {sinodais.map((item) => (
                   <button 
                     key={item.id} 
-                    className={styles.listItem}
+                    className={`${styles.listItem} ${item.situacao === 'inativa' ? styles.listItemInactive : ''}`}
                     onClick={() => handleSelectSinodal(item)}
                   >
                     <span className={styles.listItemName}>
@@ -338,7 +338,7 @@ export default function ConsultarSinodais() {
                 ) : (
                   <div className={styles.itemsList}>
                     {sinodalFederacoes.map((fed) => (
-                      <div key={fed.id} className={styles.listItem} style={{ cursor: 'default' }}>
+                      <div key={fed.id} className={`${styles.listItem} ${fed.situacao === 'inativa' ? styles.listItemInactive : ''}`} style={{ cursor: 'default' }}>
                         <span className={styles.listItemName}>
                           <strong>{fed.sigla}</strong> - {fed.nome}
                         </span>

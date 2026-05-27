@@ -224,7 +224,7 @@ export default function ConsultarFederacoes() {
                 {federacoes.map((item) => (
                   <button 
                     key={item.id} 
-                    className={styles.listItem}
+                    className={`${styles.listItem} ${item.situacao === 'inativa' ? styles.listItemInactive : ''}`}
                     onClick={() => handleSelectFederacao(item)}
                   >
                     <span className={styles.listItemName}>
@@ -299,7 +299,7 @@ export default function ConsultarFederacoes() {
                 ) : (
                   <div className={styles.itemsList}>
                     {federacaoUphs.map((uph) => (
-                      <div key={uph.id} className={styles.listItem} style={{ cursor: 'default' }}>
+                      <div key={uph.id} className={`${styles.listItem} ${uph.situacao === 'inativa' ? styles.listItemInactive : ''}`} style={{ cursor: 'default' }}>
                         <span className={styles.listItemName}>
                           {uph.nome_igreja} ({uph.numero_socios} sócios)
                         </span>

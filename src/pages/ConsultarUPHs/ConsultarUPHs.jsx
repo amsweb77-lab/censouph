@@ -201,7 +201,7 @@ export default function ConsultarUPHs() {
                 {uphs.map((item) => (
                   <button 
                     key={item.id} 
-                    className={styles.listItem}
+                    className={`${styles.listItem} ${item.situacao === 'inativa' ? styles.listItemInactive : ''}`}
                     onClick={() => handleSelectUph(item)}
                   >
                     <span className={styles.listItemName}>

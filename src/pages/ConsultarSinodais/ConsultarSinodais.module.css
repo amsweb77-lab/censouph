@@ -181,6 +181,20 @@
   background-color: #C8E6C9;
 }
 
+.listItemInactive {
+  background-color: #E0E0E0 !important;
+  border-color: #9E9E9E !important;
+  color: #616161 !important;
+}
+
+.listItemInactive:hover {
+  background-color: #D6D6D6 !important;
+}
+
+.listItemInactive .chevron {
+  color: #616161 !important;
+}
+
 .listItemName {
   font-family: 'Inter', sans-serif;
 }
