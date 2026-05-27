@@ -102,9 +102,18 @@ body {
   min-height: 100dvh;
   position: relative;
   overflow-x: hidden;
-  transition: max-width var(--transition-base);
 }
 
+/* Mobile: stack AppBar above content */
+@media (max-width: 767px) {
+  main {
+    padding-top: 0 !important;
+    padding-bottom: var(--bottom-nav-height) !important;
+    background-color: var(--color-bg);
+  }
+}
+
+/* Tablet / Desktop: sidebar + content side by side */
 @media (min-width: 768px) {
   #root {
     max-width: 100% !important;
@@ -112,16 +121,18 @@ body {
     display: flex;
     flex-direction: row;
     overflow-x: visible;
+    min-height: 100dvh;
   }
-  
+
   body {
     background-color: var(--color-bg) !important;
   }
-  
+
   main {
     padding-top: 24px !important;
     padding-bottom: 24px !important;
     flex: 1;
+    min-width: 0;
     height: 100vh;
     overflow-y: auto;
     background-color: var(--color-bg);

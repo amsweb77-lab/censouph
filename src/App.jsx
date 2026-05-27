@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import BottomNav from './components/BottomNav/BottomNav'
 import AppBar from './components/AppBar/AppBar'
+import Sidebar from './components/Sidebar/Sidebar'
 import Home from './pages/Home/Home'
 import CNHP from './pages/CNHP/CNHP'
 import Noticias from './pages/Noticias/Noticias'
@@ -17,10 +19,6 @@ import ConsultarSinodais from './pages/ConsultarSinodais/ConsultarSinodais'
 import ConsultarFederacoes from './pages/ConsultarFederacoes/ConsultarFederacoes'
 import ConsultarUPHs from './pages/ConsultarUPHs/ConsultarUPHs'
 import Tesouraria from './pages/Tesouraria/Tesouraria'
-
-
-import Sidebar from './components/Sidebar/Sidebar'
-
 
 const pageTitles = {
   '/': 'CensoUPH',
@@ -44,40 +42,57 @@ const pageTitles = {
 function App() {
   const location = useLocation()
   const currentTitle = pageTitles[location.pathname] || 'CensoUPH'
-  const isHome = location.pathname === '/'
+
+  // Mobile hamburger menu state
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <>
-      <Sidebar />
-      <AppBar title={currentTitle} showBack={false} />
-      <main style={{
-        paddingTop: 'var(--appbar-height)',
-        paddingBottom: 'var(--bottom-nav-height)',
-        minHeight: '100dvh',
-      }}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/cnhp" element={<CNHP />} />
-          <Route path="/noticias" element={<Noticias />} />
-          <Route path="/downloads" element={<Downloads />} />
-          <Route path="/menu" element={<Menu />} />
-          <Route path="/formularios" element={<Downloads />} />
-          <Route path="/tesouraria" element={<Tesouraria />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/cadastro-usuario" element={<CadastroUsuario />} />
-          
-          <Route path="/cadastrar-sinodais" element={<ProtectedRoute><CadastroSinodal /></ProtectedRoute>} />
-          <Route path="/cadastrar-federacoes" element={<ProtectedRoute><CadastroFederacao /></ProtectedRoute>} />
-          <Route path="/cadastrar-uphs" element={<ProtectedRoute><CadastroUPH /></ProtectedRoute>} />
-          <Route path="/cadastrar-diretorias" element={<ProtectedRoute><CadastroDiretoria /></ProtectedRoute>} />
+    <div style={{ display: 'flex', minHeight: '100dvh' }}>
+      {/* Sidebar: desktop rail + mobile drawer */}
+      <Sidebar
+        mobileOpen={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+      />
 
-          <Route path="/consultar-sinodais" element={<ConsultarSinodais />} />
-          <Route path="/consultar-federacoes" element={<ConsultarFederacoes />} />
-          <Route path="/consultar-uphs" element={<ConsultarUPHs />} />
-        </Routes>
-      </main>
-      <BottomNav />
-    </>
+      {/* Main content area */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        {/* AppBar: visible on mobile only, has hamburger button */}
+        <AppBar
+          title={currentTitle}
+          showBack={false}
+          onMenuToggle={() => setMobileMenuOpen(true)}
+        />
+
+        <main style={{
+          flex: 1,
+          paddingBottom: 'var(--bottom-nav-height)',
+        }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/cnhp" element={<CNHP />} />
+            <Route path="/noticias" element={<Noticias />} />
+            <Route path="/downloads" element={<Downloads />} />
+            <Route path="/menu" element={<Menu />} />
+            <Route path="/formularios" element={<Downloads />} />
+            <Route path="/tesouraria" element={<Tesouraria />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/cadastro-usuario" element={<CadastroUsuario />} />
+
+            <Route path="/cadastrar-sinodais" element={<ProtectedRoute><CadastroSinodal /></ProtectedRoute>} />
+            <Route path="/cadastrar-federacoes" element={<ProtectedRoute><CadastroFederacao /></ProtectedRoute>} />
+            <Route path="/cadastrar-uphs" element={<ProtectedRoute><CadastroUPH /></ProtectedRoute>} />
+            <Route path="/cadastrar-diretorias" element={<ProtectedRoute><CadastroDiretoria /></ProtectedRoute>} />
+
+            <Route path="/consultar-sinodais" element={<ConsultarSinodais />} />
+            <Route path="/consultar-federacoes" element={<ConsultarFederacoes />} />
+            <Route path="/consultar-uphs" element={<ConsultarUPHs />} />
+          </Routes>
+        </main>
+
+        {/* Bottom Nav: visible on mobile only */}
+        <BottomNav />
+      </div>
+    </div>
   )
 }
 

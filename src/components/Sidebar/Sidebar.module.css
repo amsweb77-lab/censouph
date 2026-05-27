@@ -1,44 +1,108 @@
+/* ============================================================
+   SIDEBAR — Desktop (sticky icon rail) + Mobile (full drawer)
+   ============================================================ */
+
+/* ---- Desktop: hidden on mobile by default ---- */
 .sidebar {
   display: none;
-  width: 72px; /* Collapsed state by default */
+  width: 72px;
   height: 100vh;
-  background-color: #07192C; /* Deep dark blue matching iCalvinus */
+  background-color: #07192C;
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   flex-direction: column;
   position: sticky;
   top: 0;
   left: 0;
-  z-index: 120;
+  z-index: 200;
   padding: 24px 12px;
   flex-shrink: 0;
   overflow: hidden;
   transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease;
 }
 
+/* Show on tablet/desktop */
 @media (min-width: 768px) {
   .sidebar {
     display: flex;
   }
 }
 
+/* Expand on hover (desktop only) */
 @media (min-width: 1024px) {
-  /* Expand to full width on hover only on desktops */
   .sidebar:hover {
     width: 260px;
     box-shadow: 6px 0 24px rgba(0, 0, 0, 0.25);
   }
 }
 
-/* ====== Header ====== */
+/* ---- Mobile Drawer mode ---- */
+/* On mobile the sidebar is a fixed full-height drawer sliding in from left */
+@media (max-width: 767px) {
+  .sidebar {
+    display: flex;                     /* visible when mobileOpen */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    width: 280px;
+    padding: 20px 14px;
+    z-index: 300;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: none;
+  }
+
+  /* Labels always visible inside the mobile drawer */
+  .sidebar .label,
+  .sidebar .appName,
+  .sidebar .actionBtn span,
+  .sidebar .copyright,
+  .sidebar .toggleIcon {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
+
+.sidebarMobileOpen {
+  transform: translateX(0) !important;
+  box-shadow: 8px 0 32px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* ---- Backdrop overlay (mobile only) ---- */
+.overlay {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 299;
+    backdrop-filter: blur(2px);
+    animation: fadeOverlay 0.25s ease-out;
+  }
+}
+
+@keyframes fadeOverlay {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
 .header {
   display: flex;
   align-items: center;
   width: 100%;
-  gap: 16px;
-  margin-bottom: 32px;
-  padding-bottom: 20px;
+  gap: 14px;
+  margin-bottom: 28px;
+  padding-bottom: 18px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   overflow: hidden;
+  position: relative;
 }
 
 .logoContainer {
@@ -49,11 +113,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   flex-shrink: 0;
   transition: transform 0.35s ease;
-  margin-left: 0px;
 }
 
 .logo {
@@ -64,15 +127,16 @@
 }
 
 .appName {
-  font-size: var(--font-size-md);
+  font-size: 15px;
   font-weight: 800;
   color: #ffffff;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.25s ease, visibility 0.25s ease;
+  flex: 1;
 }
 
 .sidebar:hover .appName {
@@ -80,37 +144,74 @@
   visibility: visible;
 }
 
-/* ====== Nav Items ====== */
+/* Close button — only visible on mobile drawer */
+.closeBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s;
+  margin-left: auto;
+}
+
+.closeBtn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+@media (max-width: 767px) {
+  .closeBtn {
+    display: flex;
+  }
+}
+
+/* ============================================================
+   NAV ITEMS
+   ============================================================ */
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+
+.nav::-webkit-scrollbar {
+  display: none;
 }
 
 .navItem {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 12px 14px;
+  gap: 14px;
+  padding: 11px 13px;
   color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
-  font-size: var(--font-size-base);
+  font-size: 14px;
   border-radius: 8px;
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
   text-decoration: none;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .navItem:hover {
   color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255, 255, 255, 0.06);
 }
 
 .navItemActive {
   color: #ffffff !important;
-  background-color: #00796B !important; /* Teal green active highlight */
+  background-color: #00796B !important;
   box-shadow: 0 4px 12px rgba(0, 121, 107, 0.3);
 }
 
@@ -119,7 +220,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 24px;
+  width: 22px;
 }
 
 .label {
@@ -127,6 +228,7 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.2s ease, visibility 0.2s ease;
+  font-size: 14px;
 }
 
 .sidebar:hover .label {
@@ -134,12 +236,14 @@
   visibility: visible;
 }
 
-/* ====== Footer ====== */
+/* ============================================================
+   FOOTER
+   ============================================================ */
 .footer {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding-top: 16px;
+  gap: 10px;
+  padding-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   overflow: hidden;
 }
@@ -147,24 +251,26 @@
 .actionBtn {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 12px 14px;
+  gap: 14px;
+  padding: 11px 13px;
   color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
+  font-size: 14px;
   border-radius: 8px;
   text-decoration: none;
   background: none;
   border: none;
   width: 100%;
   text-align: left;
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
   cursor: pointer;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .actionBtn:hover {
   color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255, 255, 255, 0.06);
 }
 
 .actionBtnActive {
@@ -189,14 +295,13 @@
 }
 
 .logout:hover {
-  background-color: rgba(255, 167, 38, 0.08);
+  background-color: rgba(255, 167, 38, 0.08) !important;
 }
 
 .copyright {
-  font-size: var(--font-size-xs);
+  font-size: 11px;
   color: rgba(255, 255, 255, 0.3);
   text-align: center;
-  margin-top: 4px;
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
@@ -208,7 +313,9 @@
   visibility: visible;
 }
 
-/* ====== Collapsible Nested Tree Menu ====== */
+/* ============================================================
+   COLLAPSIBLE NESTED TREE
+   ============================================================ */
 .submenuContainer {
   display: flex;
   flex-direction: column;
@@ -220,23 +327,24 @@
   display: flex;
   align-items: center;
   width: 100%;
-  gap: 16px;
-  padding: 12px 14px;
+  gap: 14px;
+  padding: 11px 13px;
   color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
-  font-size: var(--font-size-base);
+  font-size: 14px;
   border-radius: 8px;
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
   cursor: pointer;
   background: none;
   border: none;
   text-align: left;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .submenuHeader:hover {
   color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255, 255, 255, 0.06);
 }
 
 .toggleIcon {
@@ -246,6 +354,7 @@
   transition: opacity 0.2s ease, visibility 0.2s ease;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .sidebar:hover .toggleIcon {
@@ -256,23 +365,23 @@
 .nestedGroup {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   margin-top: 4px;
-  padding-left: 20px;
+  padding-left: 18px;
   border-left: 1px solid rgba(255, 255, 255, 0.08);
-  margin-left: 24px;
+  margin-left: 22px;
 }
 
 .nestedItem {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 12px;
+  gap: 10px;
+  padding: 7px 10px;
   color: rgba(255, 255, 255, 0.6);
-  font-size: 0.9rem;
+  font-size: 13px;
   font-weight: 500;
   border-radius: 6px;
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
   cursor: pointer;
   background: none;
   border: none;
@@ -289,23 +398,22 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding-left: 12px;
+  padding-left: 10px;
   border-left: 1px solid rgba(255, 255, 255, 0.05);
-  margin-left: 18px;
+  margin-left: 16px;
   margin-top: 2px;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .deepItem {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 10px;
+  padding: 5px 8px;
   color: rgba(255, 255, 255, 0.5);
-  font-size: 0.82rem;
+  font-size: 12px;
   border-radius: 4px;
-  text-decoration: none;
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
   white-space: nowrap;
   width: 100%;
   text-align: left;
@@ -315,12 +423,6 @@
 }
 
 .deepItem:hover {
-  color: #00E676; /* Bright green highlight for active doc link */
+  color: #00E676;
   background-color: rgba(0, 230, 118, 0.05);
 }
-
-.deepItemActive {
-  color: #00E676 !important;
-  font-weight: 600;
-}
-
