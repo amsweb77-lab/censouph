@@ -22,7 +22,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import styles from './Sidebar.module.css';
 
 export default function Sidebar({ mobileOpen = false, onClose }) {
-  const { user, signOut } = useAuth();
+  const { user, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -281,8 +281,8 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
             </NavLink>
           ))}
 
-          {/* Collapsible Adm Submenu */}
-          {user && (
+          {/* Collapsible Adm Submenu — visível apenas para administradores */}
+          {isAdmin && (
             <div className={styles.submenuContainer}>
               <button
                 onClick={() => setAdminOpen(!adminOpen)}

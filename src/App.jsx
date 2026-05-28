@@ -8,6 +8,7 @@ import Noticias from './pages/Noticias/Noticias'
 import Downloads from './pages/Downloads/Downloads'
 import Menu from './pages/Menu/Menu'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
+import AdminRoute from './components/AdminRoute/AdminRoute'
 import Login from './pages/Login/Login'
 import CadastroUsuario from './pages/CadastroUsuario/CadastroUsuario'
 import CadastroSinodal from './pages/CadastroSinodal/CadastroSinodal'
@@ -91,7 +92,7 @@ function App() {
             <Route path="/cadastrar-federacoes" element={<ProtectedRoute><CadastroFederacao /></ProtectedRoute>} />
             <Route path="/cadastrar-uphs" element={<ProtectedRoute><CadastroUPH /></ProtectedRoute>} />
             <Route path="/cadastrar-diretorias" element={<ProtectedRoute><CadastroDiretoria /></ProtectedRoute>} />
-            <Route path="/gerenciar-banners" element={<ProtectedRoute><GerenciarBanners /></ProtectedRoute>} />
+            <Route path="/gerenciar-banners" element={<AdminRoute><GerenciarBanners /></AdminRoute>} />
 
             <Route path="/consultar-sinodais" element={<ConsultarSinodais />} />
             <Route path="/consultar-federacoes" element={<ConsultarFederacoes />} />

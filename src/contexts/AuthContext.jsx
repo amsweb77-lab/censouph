@@ -26,9 +26,13 @@ export function AuthProvider({ children }) {
     return () => subscription.unsubscribe()
   }, [])
 
+  // Verifica se o usuário logado tem role de administrador
+  const isAdmin = user?.user_metadata?.role === 'admin'
+
   const value = {
     session,
     user,
+    isAdmin,
     loading,
     signOut: () => supabase.auth.signOut(),
   }
