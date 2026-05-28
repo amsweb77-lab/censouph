@@ -1,0 +1,136 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 16px 32px;
+  min-height: calc(100dvh - 56px);
+  background-color: var(--color-bg);
+}
+
+/* ====== Header ====== */
+.headerSection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pageTitle {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.pageSubtitle {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 500px;
+}
+
+.externalLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 20px;
+  padding: 4px 12px;
+  width: fit-content;
+  transition: background 0.2s, color 0.2s;
+}
+
+.externalLink:hover {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+/* ====== Info chips ====== */
+.infoRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.infoChip {
+  background-color: #E8F5E9;
+  color: var(--color-primary);
+  border: 1px solid #C8E6C9;
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ====== Map Container ====== */
+.mapContainer {
+  flex: 1;
+  width: 100%;
+  min-height: 480px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  border: 1px solid #E0E0E0;
+  background-color: #F5F5F5;
+  position: relative;
+}
+
+.mapIframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  min-height: 480px;
+  display: block;
+}
+
+/* Desktop: taller map */
+@media (min-width: 768px) {
+  .page {
+    padding: 0;
+  }
+
+  .pageTitle {
+    font-size: 26px;
+  }
+
+  .mapContainer {
+    min-height: 620px;
+  }
+
+  .mapIframe {
+    min-height: 620px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .mapContainer {
+    min-height: 75vh;
+  }
+
+  .mapIframe {
+    min-height: 75vh;
+  }
+}
+
+/* ====== Footer ====== */
+.footerNote {
+  font-size: 11px;
+  color: #AAAAAA;
+  text-align: center;
+}
+
+.footerNote a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footerNote a:hover {
+  text-decoration: underline;
+}

@@ -1,6 +1,6 @@
 .page {
   padding: 16px;
-  padding-bottom: calc(var(--bottom-nav-height) + 24px);
+  padding-bottom: 24px;
   display: flex;
   flex-direction: column;
   gap: 20px;

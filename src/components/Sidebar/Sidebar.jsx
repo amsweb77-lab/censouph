@@ -15,6 +15,7 @@ import {
   MdAssignment,
   MdAccountBalanceWallet,
   MdClose,
+  MdMap,
 } from 'react-icons/md';
 import { useAuth } from '../../contexts/AuthContext';
 import styles from './Sidebar.module.css';
@@ -44,6 +45,7 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
     { label: 'Diretoria da CNHP', path: '/cnhp', icon: <MdPeople size={20} /> },
     { label: 'Notícias da UPH', path: '/noticias', icon: <MdList size={20} /> },
     { label: 'Estatística', path: '/menu', icon: <MdBarChart size={20} /> },
+    { label: 'Mapa IPB', path: '/mapa-ipb', icon: <MdMap size={20} /> },
   ];
 
   const secondaryItems = [

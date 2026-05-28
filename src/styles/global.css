@@ -108,7 +108,7 @@ body {
 @media (max-width: 767px) {
   main {
     padding-top: 0 !important;
-    padding-bottom: var(--bottom-nav-height) !important;
+    padding-bottom: 24px !important;
     background-color: var(--color-bg);
   }
 }

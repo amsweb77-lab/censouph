@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
-import BottomNav from './components/BottomNav/BottomNav'
 import AppBar from './components/AppBar/AppBar'
 import Sidebar from './components/Sidebar/Sidebar'
 import Home from './pages/Home/Home'
@@ -19,6 +18,7 @@ import ConsultarSinodais from './pages/ConsultarSinodais/ConsultarSinodais'
 import ConsultarFederacoes from './pages/ConsultarFederacoes/ConsultarFederacoes'
 import ConsultarUPHs from './pages/ConsultarUPHs/ConsultarUPHs'
 import Tesouraria from './pages/Tesouraria/Tesouraria'
+import MapaIPB from './pages/MapaIPB/MapaIPB'
 
 const pageTitles = {
   '/': 'CensoUPH',
@@ -37,6 +37,7 @@ const pageTitles = {
   '/consultar-sinodais': 'Consulta de Sinodais',
   '/consultar-federacoes': 'Consulta de Federações',
   '/consultar-uphs': 'Consulta de UPHs',
+  '/mapa-ipb': 'Mapa IPB',
 }
 
 function App() {
@@ -86,11 +87,11 @@ function App() {
             <Route path="/consultar-sinodais" element={<ConsultarSinodais />} />
             <Route path="/consultar-federacoes" element={<ConsultarFederacoes />} />
             <Route path="/consultar-uphs" element={<ConsultarUPHs />} />
+            <Route path="/mapa-ipb" element={<MapaIPB />} />
           </Routes>
         </main>
 
-        {/* Bottom Nav: visible on mobile only */}
-        <BottomNav />
+        {/* Bottom Nav removido — navegação feita pelo menu hambúrguer */}
       </div>
     </div>
   )

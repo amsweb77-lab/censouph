@@ -312,12 +312,7 @@ export default function Home() {
     fetchData();
   }, []);
 
-  const scrollToMap = () => {
-    const mapElement = document.getElementById('map-section');
-    if (mapElement) {
-      mapElement.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+
 
   return (
     <div className={styles.page}>
@@ -436,19 +431,7 @@ export default function Home() {
           )}
         </section>
 
-        {/* Mapa Geral Section */}
-        <section id="map-section" className={styles.section} style={{ padding: '0 1.5rem', marginTop: '16px', marginBottom: '2rem' }}>
-          <h2 className={styles.sectionTitle}>IPB no Brasil</h2>
-          <div style={{ height: '400px', width: '100%', borderRadius: '12px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', marginTop: '8px' }}>
-            <iframe 
-              src="https://www.icalvinus.app/ipb-no-brasil/mapa-geral/" 
-              title="Mapa Geral IPB"
-              allowFullScreen
-              loading="lazy"
-              style={{ width: '100%', height: '100%', border: 'none' }}
-            ></iframe>
-          </div>
-        </section>
+
       </div>
 
       {/* Right Column: Aniversariantes do Mês */}
