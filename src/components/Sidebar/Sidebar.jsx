@@ -51,6 +51,7 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
   const secondaryItems = [
     { label: 'Formulários', path: '/formularios', icon: <MdAssignment size={20} /> },
     { label: 'Tesouraria', path: '/tesouraria', icon: <MdAccountBalanceWallet size={20} /> },
+    ...(user ? [{ label: 'Gerenciar Banners', path: '/gerenciar-banners', icon: <MdAssignment size={20} /> }] : []),
   ];
 
   return (

@@ -35,9 +35,20 @@ const regionGradients = {
 
 export default function Home() {
   const navigate = useNavigate();
+  const [bannersList, setBannersList] = useState([]);
   const [currentBanner, setCurrentBanner] = useState(0);
   const [noticiasData, setNoticiasData] = useState([]);
   const [aniversariantes, setAniversariantes] = useState([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('secnhp_banners');
+    if (saved) {
+      setBannersList(JSON.parse(saved));
+    } else {
+      setBannersList(banners);
+      localStorage.setItem('secnhp_banners', JSON.stringify(banners));
+    }
+  }, []);
   const [regioes, setRegioes] = useState([]);
   const [stats, setStats] = useState({ sinodaisAtivas: 0, sinodaisInativas: 0, federacoes: 0, uphs: 0, socios: 0 });
   const [loading, setLoading] = useState(true);
@@ -126,8 +137,8 @@ export default function Home() {
   };
 
   const nextBanner = useCallback(() => {
-    setCurrentBanner((prev) => (prev + 1) % banners.length);
-  }, []);
+    setCurrentBanner((prev) => (prev + 1) % (bannersList.length || banners.length));
+  }, [bannersList]);
 
   useEffect(() => {
     const timer = setInterval(nextBanner, 4000);
@@ -323,13 +334,17 @@ export default function Home() {
         {/* Banner Carousel */}
         <div className={styles.bannerSection}>
           <div className={styles.bannerTrack}>
-            {banners.map((banner, index) => (
+            {(bannersList.length > 0 ? bannersList : banners).map((banner, index) => (
               <div
                 key={banner.id}
                 className={`${styles.banner} ${
                   index === currentBanner ? styles.bannerActive : ''
                 }`}
-                style={{ background: banner.gradient }}
+                style={{ 
+                  background: banner.imageUrl 
+                    ? `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url(${banner.imageUrl}) center/cover no-repeat` 
+                    : banner.gradient 
+                }}
                 onClick={() => banner.url && window.open(banner.url, '_blank')}
               >
                 <p className={styles.bannerText}>{banner.text}</p>
@@ -337,7 +352,7 @@ export default function Home() {
             ))}
           </div>
           <div className={styles.dots}>
-            {banners.map((_, index) => (
+            {(bannersList.length > 0 ? bannersList : banners).map((_, index) => (
               <button
                 key={index}
                 className={`${styles.dot} ${

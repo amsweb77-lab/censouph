@@ -19,6 +19,7 @@ import ConsultarFederacoes from './pages/ConsultarFederacoes/ConsultarFederacoes
 import ConsultarUPHs from './pages/ConsultarUPHs/ConsultarUPHs'
 import Tesouraria from './pages/Tesouraria/Tesouraria'
 import MapaIPB from './pages/MapaIPB/MapaIPB'
+import GerenciarBanners from './pages/GerenciarBanners/GerenciarBanners'
 
 const pageTitles = {
   '/': 'SECNHP - Secretário Executivo da Confederação Nacional de Homens Presbiterianos',
@@ -38,6 +39,7 @@ const pageTitles = {
   '/consultar-federacoes': 'Consulta de Federações',
   '/consultar-uphs': 'Consulta de UPHs',
   '/mapa-ipb': 'Mapa IPB',
+  '/gerenciar-banners': 'Gerenciar Banners',
 }
 
 function App() {
@@ -83,6 +85,7 @@ function App() {
             <Route path="/cadastrar-federacoes" element={<ProtectedRoute><CadastroFederacao /></ProtectedRoute>} />
             <Route path="/cadastrar-uphs" element={<ProtectedRoute><CadastroUPH /></ProtectedRoute>} />
             <Route path="/cadastrar-diretorias" element={<ProtectedRoute><CadastroDiretoria /></ProtectedRoute>} />
+            <Route path="/gerenciar-banners" element={<ProtectedRoute><GerenciarBanners /></ProtectedRoute>} />
 
             <Route path="/consultar-sinodais" element={<ConsultarSinodais />} />
             <Route path="/consultar-federacoes" element={<ConsultarFederacoes />} />

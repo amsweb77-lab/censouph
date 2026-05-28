@@ -192,5 +192,6 @@ export const menuItems = {
     { label: 'Cadastrar Federações', path: '/cadastrar-federacoes' },
     { label: 'Cadastrar UPHs', path: '/cadastrar-uphs' },
     { label: 'Cadastrar Diretorias', path: '/cadastrar-diretorias' },
+    { label: 'Gerenciar Banners', path: '/gerenciar-banners' },
   ],
 };

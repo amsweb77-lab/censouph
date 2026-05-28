@@ -1,0 +1,313 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 56px);
+  background-color: var(--color-bg);
+  width: 100%;
+}
+
+.customHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: var(--color-primary-dark);
+  color: var(--color-text-on-dark);
+  padding: 16px;
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.backIconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: background-color var(--transition-fast);
+}
+
+.backIconButton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.headerTitle {
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  font-weight: 700;
+}
+
+.container {
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mainTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--color-primary-light);
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.subTitle {
+  font-size: var(--font-size-xl);
+  font-weight: 900;
+  color: var(--color-text-primary);
+  margin: -8px 0 8px;
+  text-align: center;
+}
+
+.formCard {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cardTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  margin: 0 0 4px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #D1D5DB;
+  background-color: #FAFAFA;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  outline: none;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  background-color: white;
+}
+
+.toggleGroup {
+  display: flex;
+  border-radius: var(--radius-sm);
+  background-color: #F3F4F6;
+  padding: 4px;
+  width: 100%;
+  gap: 4px;
+}
+
+.toggleBtn {
+  flex: 1;
+  padding: 8px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-align: center;
+  border-radius: calc(var(--radius-sm) - 2px);
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.toggleActive {
+  background-color: white;
+  color: var(--color-primary-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+.select {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #D1D5DB;
+  background-color: white;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  outline: none;
+  cursor: pointer;
+}
+
+.previewContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.previewLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.bannerPreview {
+  width: 100%;
+  border-radius: var(--radius-md);
+  padding: 24px 16px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.previewText {
+  color: white;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  line-height: 1.4;
+}
+
+.submitBtn {
+  width: 100%;
+  background-color: var(--color-primary);
+  color: white;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: var(--font-size-base);
+  transition: background-color var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.submitBtn:hover {
+  background-color: var(--color-primary-dark);
+}
+
+/* Banners list */
+.bannersListSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.sectionTitle {
+  font-size: var(--font-size-md);
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.emptyText {
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: 20px;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+  border: 1px dashed #D1D5DB;
+}
+
+.bannersList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bannerRow {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (min-width: 480px) {
+  .bannerRow {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.bannerThumb {
+  width: 100%;
+  height: 60px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+@media (min-width: 480px) {
+  .bannerThumb {
+    width: 160px;
+    flex-shrink: 0;
+  }
+}
+
+.thumbText {
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  line-height: 1.2;
+}
+
+.bannerInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+}
+
+.bannerLink {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  word-break: break-all;
+  max-width: 250px;
+}
+
+.deleteBtn {
+  background-color: #FEE2E2;
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast);
+}
+
+.deleteBtn:hover {
+  background-color: #FCA5A5;
+}
