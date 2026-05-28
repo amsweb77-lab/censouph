@@ -365,8 +365,16 @@
 /* Base Map ocean/land styling matching CNHP mockup */
 .mapColumn :global(.leaflet-container) {
   background-color: #e5e7eb !important; /* Light gray ocean */
+  z-index: 0 !important; /* Garante que o mapa nunca sobreponha a sidebar */
+}
+
+/* Rebaixa todos os controles do Leaflet para ficarem abaixo da sidebar */
+.mapColumn :global(.leaflet-pane),
+.mapColumn :global(.leaflet-control-container) {
+  z-index: auto !important;
 }
 
 .mapColumn :global(.leaflet-tile-pane) {
   filter: grayscale(100%) brightness(1.08) contrast(1.15); /* Makes neighboring countries white and ocean a beautiful light gray */
 }
+
