@@ -24,7 +24,7 @@ import GerenciarBanners from './pages/GerenciarBanners/GerenciarBanners'
 import RelatorioEstatistica from './pages/RelatorioEstatistica/RelatorioEstatistica'
 
 const pageTitles = {
-  '/': 'SECNHP - Secretário Executivo da Confederação Nacional de Homens Presbiterianos',
+  '/': 'SECNHP - Secretário Executivo da CNHP',
   '/cnhp': 'CNHP',
   '/noticias': 'Notícias da UPH',
   '/downloads': 'Materiais para download',
@@ -47,7 +47,7 @@ const pageTitles = {
 
 function App() {
   const location = useLocation()
-  const currentTitle = pageTitles[location.pathname] || 'SECNHP - Secretário Executivo da Confederação Nacional de Homens Presbiterianos'
+  const currentTitle = pageTitles[location.pathname] || 'SECNHP - Secretário Executivo da CNHP'
   const isMapIPB = location.pathname === '/mapa-ipb'
 
   // Mobile hamburger menu state

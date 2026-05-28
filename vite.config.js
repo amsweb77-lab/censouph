@@ -8,9 +8,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'SECNHP',
+        name: 'SECNHP - Secretário Executivo da CNHP',
         short_name: 'SECNHP',
-        description: 'SECNHP - Secretário Executivo da Confederação Nacional de Homens Presbiterianos',
+        description: 'SECNHP - Secretário Executivo da CNHP',
         theme_color: '#1B5E20',
         background_color: '#ffffff',
         display: 'standalone',
