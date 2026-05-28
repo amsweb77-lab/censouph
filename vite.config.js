@@ -10,7 +10,7 @@ export default defineConfig({
       manifest: {
         name: 'SECNHP',
         short_name: 'SECNHP',
-        description: 'Sistema de Estatística da Confederação Nacional de Homens Presbiterianos',
+        description: 'SECNHP - Secretário Executivo da Confederação Nacional de Homens Presbiterianos',
         theme_color: '#1B5E20',
         background_color: '#ffffff',
         display: 'standalone',

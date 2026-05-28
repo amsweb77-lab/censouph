@@ -1,6 +1,6 @@
-# SECNHP - Sistema de Estatística da Confederação Nacional de Homens Presbiterianos
+# SECNHP - Secretário Executivo da Confederação Nacional de Homens Presbiterianos
 
-Este projeto é o sistema de estatísticas, notícias, diretórios e materiais de apoio para a Confederação Nacional de Homens Presbiterianos (CNHP).
+Este projeto é o sistema oficial do Secretário Executivo da Confederação Nacional de Homens Presbiterianos (CNHP).
 
 ## 🚀 Tecnologias
 

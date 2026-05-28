@@ -21,7 +21,7 @@ import Tesouraria from './pages/Tesouraria/Tesouraria'
 import MapaIPB from './pages/MapaIPB/MapaIPB'
 
 const pageTitles = {
-  '/': 'SECNHP',
+  '/': 'SECNHP - Secretário Executivo da Confederação Nacional de Homens Presbiterianos',
   '/cnhp': 'CNHP',
   '/noticias': 'Notícias da UPH',
   '/downloads': 'Materiais para download',
@@ -42,7 +42,7 @@ const pageTitles = {
 
 function App() {
   const location = useLocation()
-  const currentTitle = pageTitles[location.pathname] || 'SECNHP'
+  const currentTitle = pageTitles[location.pathname] || 'SECNHP - Secretário Executivo da Confederação Nacional de Homens Presbiterianos'
 
   // Mobile hamburger menu state
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
