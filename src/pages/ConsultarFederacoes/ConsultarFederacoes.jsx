@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
 import { MdArrowBack, MdChevronRight } from 'react-icons/md';
 import styles from './ConsultarFederacoes.module.css';
+import InteractiveMap from '../../components/InteractiveMap/InteractiveMap';
 
 export default function ConsultarFederacoes() {
   const navigate = useNavigate();
@@ -187,16 +188,11 @@ export default function ConsultarFederacoes() {
           <>
             <h1 className={styles.mainTitle}>FEDERAÇÕES DE HOMENS</h1>
             <h2 className={styles.subTitle}>Escolha uma região</h2>
-            <div className={styles.regionsGrid}>
-              {regioes.map((reg) => (
-                <button
-                  key={reg.id}
-                  className={styles.regionBtn}
-                  onClick={() => handleSelectRegion(reg)}
-                >
-                  {reg.nome}
-                </button>
-              ))}
+            <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+              <InteractiveMap 
+                regioes={regioes}
+                onRegionClick={handleSelectRegion}
+              />
             </div>
           </>
         )}

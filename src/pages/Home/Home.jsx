@@ -6,6 +6,7 @@ import NewsCard from '../../components/NewsCard/NewsCard';
 import BirthdayList from '../../components/BirthdayList/BirthdayList';
 import { MdClose } from 'react-icons/md';
 import styles from './Home.module.css';
+import InteractiveMap from '../../components/InteractiveMap/InteractiveMap';
 
 const banners = [
   {
@@ -352,17 +353,11 @@ export default function Home() {
         {/* Regions Grid Section */}
         <section className={styles.section} style={{ padding: '0 1.5rem', marginTop: '16px' }}>
           <h2 className={styles.sectionTitle}>Escolha uma região</h2>
-          <div className={styles.regionsGrid}>
-            {regioes.map((reg) => (
-              <button
-                key={reg.id}
-                className={styles.regionBtn}
-                style={{ background: regionGradients[reg.nome] || 'var(--color-primary)' }}
-                onClick={() => navigate('/consultar-sinodais', { state: { initialRegion: reg } })}
-              >
-                {reg.nome}
-              </button>
-            ))}
+          <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'center' }}>
+            <InteractiveMap 
+              regioes={regioes}
+              onRegionClick={(reg) => navigate('/consultar-sinodais', { state: { initialRegion: reg } })}
+            />
           </div>
         </section>
 
