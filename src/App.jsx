@@ -42,7 +42,7 @@ const pageTitles = {
 
 function App() {
   const location = useLocation()
-  const currentTitle = pageTitles[location.pathname] || 'CensoUPH'
+  const currentTitle = pageTitles[location.pathname] || 'SECNHP'
 
   // Mobile hamburger menu state
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)

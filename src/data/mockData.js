@@ -1,4 +1,4 @@
-/* Dados mockados para desenvolvimento local do CensoUPH */
+/* Dados mockados para desenvolvimento local do SECNHP */
 
 export const estatisticasNacionais = {
   sinodais: 68,
