@@ -9,9 +9,9 @@ const regionsConfig = [
     color: '#004D40', // Verde Esmeralda/Teal
     hoverColor: 'rgba(0, 77, 64, 0.45)',
     strokeColor: '#004D40',
-    points: '20,250 120,280 180,285 245,295 240,360 300,340 330,300 330,170 270,140 270,40 190,50 110,85 20,140',
-    labelX: 200,
-    labelY: 200
+    points: '20,250 20,300 130,350 190,380 260,390 265,300 345,290 345,160 295,140 295,40 220,40 190,70 120,85 20,140',
+    labelX: 180,
+    labelY: 210
   },
   {
     id: 'norte-ii',
@@ -19,9 +19,9 @@ const regionsConfig = [
     color: '#1B5E20', // Verde Floresta
     hoverColor: 'rgba(27, 94, 32, 0.45)',
     strokeColor: '#1B5E20',
-    points: '330,170 330,300 370,300 480,410 560,380 550,290 630,230 630,150 550,140 490,50 410,70 330,170',
-    labelX: 470,
-    labelY: 210
+    points: '345,290 345,160 295,140 295,40 380,80 430,90 410,30 460,30 490,140 550,140 535,260 485,320 535,330 520,530 460,530 460,400 345,290',
+    labelX: 440,
+    labelY: 230
   },
   {
     id: 'nordeste',
@@ -29,9 +29,9 @@ const regionsConfig = [
     color: '#BF360C', // Vermelho Quente/Laranja
     hoverColor: 'rgba(191, 54, 12, 0.45)',
     strokeColor: '#BF360C',
-    points: '630,150 630,230 550,290 560,380 660,400 680,420 740,310 750,230 710,170 630,150',
-    labelX: 660,
-    labelY: 290
+    points: '535,260 485,320 535,330 520,490 620,490 685,420 725,350 760,310 765,240 735,210 705,160 620,150 535,260',
+    labelX: 620,
+    labelY: 310
   },
   {
     id: 'centro-oeste',
@@ -39,9 +39,9 @@ const regionsConfig = [
     color: '#E65100', // Dourado/Laranja Cerrado
     hoverColor: 'rgba(230, 81, 0, 0.45)',
     strokeColor: '#E65100',
-    points: '240,360 300,340 330,300 370,300 480,410 530,410 530,500 480,600 370,580 300,390 240,360',
-    labelX: 410,
-    labelY: 460
+    points: '260,390 265,300 345,290 485,320 535,330 520,530 460,530 540,530 540,580 475,595 470,710 360,710 305,580 260,390',
+    labelX: 380,
+    labelY: 490
   },
   {
     id: 'sudeste-i',
@@ -49,9 +49,9 @@ const regionsConfig = [
     color: '#2196F3', // Azul Royal
     hoverColor: 'rgba(33, 150, 243, 0.45)',
     strokeColor: '#2196F3',
-    points: '530,410 660,400 680,420 650,540 650,600 570,600 530,500 530,410',
-    labelX: 610,
-    labelY: 520
+    points: '520,490 620,490 685,420 680,550 685,610 645,615 570,610 540,580 520,490',
+    labelX: 590,
+    labelY: 540
   },
   {
     id: 'sudeste-ii',
@@ -59,8 +59,8 @@ const regionsConfig = [
     color: '#0D47A1', // Azul Marinho
     hoverColor: 'rgba(13, 71, 161, 0.45)',
     strokeColor: '#0D47A1',
-    points: '480,600 570,600 650,600 630,660 530,670 480,630 480,600',
-    labelX: 560,
+    points: '475,595 570,610 645,615 650,660 540,680 470,710 475,595',
+    labelX: 540,
     labelY: 640
   },
   {
@@ -69,9 +69,9 @@ const regionsConfig = [
     color: '#880E4F', // Vinho/Borgonha
     hoverColor: 'rgba(136, 14, 79, 0.45)',
     strokeColor: '#880E4F',
-    points: '370,580 480,600 480,630 530,670 480,740 410,810 365,710 370,580',
-    labelX: 440,
-    labelY: 740
+    points: '470,710 540,680 520,770 490,890 380,880 395,780 430,750 470,710',
+    labelX: 450,
+    labelY: 780
   }
 ];
 
