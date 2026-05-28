@@ -21,7 +21,7 @@ import Tesouraria from './pages/Tesouraria/Tesouraria'
 import MapaIPB from './pages/MapaIPB/MapaIPB'
 
 const pageTitles = {
-  '/': 'CensoUPH',
+  '/': 'SECNHP',
   '/cnhp': 'CNHP',
   '/noticias': 'Notícias da UPH',
   '/downloads': 'Materiais para download',

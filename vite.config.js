@@ -8,9 +8,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'CensoUPH',
-        short_name: 'CensoUPH',
-        description: 'Aplicativo do Censo da União Presbiteriana de Homens',
+        name: 'SECNHP',
+        short_name: 'SECNHP',
+        description: 'Sistema de Estatística da Confederação Nacional de Homens Presbiterianos',
         theme_color: '#1B5E20',
         background_color: '#ffffff',
         display: 'standalone',
