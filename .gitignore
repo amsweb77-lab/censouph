@@ -23,4 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
+# PDFs e arquivos binários desnecessários
+*.pdf
+
 .vercel
