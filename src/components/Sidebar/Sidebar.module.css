@@ -13,7 +13,7 @@
   position: sticky;
   top: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 1020;
   padding: 24px 12px;
   flex-shrink: 0;
   overflow: hidden;
@@ -46,7 +46,7 @@
     height: 100dvh;
     width: 280px;
     padding: 20px 14px;
-    z-index: 1001;
+    z-index: 1020;
     transform: translateX(-100%);
     transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: none;
@@ -79,7 +79,7 @@
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.55);
-    z-index: 1000;
+    z-index: 1015;
     backdrop-filter: blur(2px);
     animation: fadeOverlay 0.25s ease-out;
   }

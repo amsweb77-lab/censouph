@@ -330,7 +330,7 @@ export default function GerenciarBanners() {
             <div 
               className={styles.bannerPreview}
               style={{
-                background: useImage ? `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${imageUrl}) center/cover no-repeat` : gradient
+                background: useImage ? `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${imageUrl}') center/cover no-repeat` : gradient
               }}
             >
               <div className={styles.previewContent}>
@@ -384,7 +384,7 @@ export default function GerenciarBanners() {
                   <div 
                     className={styles.bannerThumb}
                     style={{
-                      background: banner.imageUrl ? `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${banner.imageUrl}) center/cover no-repeat` : banner.gradient
+                      background: banner.imageUrl ? `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${banner.imageUrl}') center/cover no-repeat` : banner.gradient
                     }}
                   >
                     <span className={styles.thumbText}>{banner.text}</span>

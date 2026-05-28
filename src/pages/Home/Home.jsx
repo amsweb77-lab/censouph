@@ -349,7 +349,7 @@ export default function Home() {
               }`}
               style={{ 
                 background: banner.imageUrl 
-                  ? `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${banner.imageUrl}) center/cover no-repeat` 
+                  ? `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${banner.imageUrl}') center/cover no-repeat` 
                   : banner.gradient 
               }}
               onClick={() => banner.url && window.open(banner.url, '_blank')}
