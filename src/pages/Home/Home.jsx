@@ -4,19 +4,28 @@ import { supabase } from '../../lib/supabaseClient';
 import StatCard from '../../components/StatCard/StatCard';
 import NewsCard from '../../components/NewsCard/NewsCard';
 import BirthdayList from '../../components/BirthdayList/BirthdayList';
-import { MdClose } from 'react-icons/md';
+import { MdClose, MdCake } from 'react-icons/md';
 import styles from './Home.module.css';
 import InteractiveMap from '../../components/InteractiveMap/InteractiveMap';
 
 const banners = [
   {
     id: 1,
+    text: 'XVI CONGRESSO DA CNHP',
+    subheadline: 'Confira o Resumo Oficial: Destaques, comissões e os rumos definidos em nosso encontro.',
+    ctaText: 'Baixar Boletim Completo',
+    gradient: 'linear-gradient(135deg, #1B5E20 0%, #0D47A1 100%)',
+    url: 'https://online.fliphtml5.com/CNHP2026/XVI-BOLETIM-INFORMATIVO/#p=1',
+    pdfUrl: 'https://online.fliphtml5.com/CNHP2026/XVI-BOLETIM-INFORMATIVO/#p=1',
+  },
+  {
+    id: 2,
     text: 'CLIQUE AQUI E CONHEÇA A NOVA Revista da UPH',
     gradient: 'linear-gradient(135deg, #1B5E20 0%, #0D47A1 100%)',
     url: 'https://www.uph.org.br/revista-da-uph', // <-- Revista UPH
   },
   {
-    id: 2,
+    id: 3,
     text: 'VISITE O SITE OFICIAL DA UPH',
     gradient: 'linear-gradient(135deg, #0D47A1 0%, #1B5E20 100%)',
     url: 'https://www.uph.org.br', // <-- Insira o link externo aqui
@@ -41,12 +50,12 @@ export default function Home() {
   const [aniversariantes, setAniversariantes] = useState([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('secnhp_banners');
+    const saved = localStorage.getItem('secnhp_banners_v3');
     if (saved) {
       setBannersList(JSON.parse(saved));
     } else {
       setBannersList(banners);
-      localStorage.setItem('secnhp_banners', JSON.stringify(banners));
+      localStorage.setItem('secnhp_banners_v3', JSON.stringify(banners));
     }
   }, []);
   const [regioes, setRegioes] = useState([]);
@@ -329,134 +338,153 @@ export default function Home() {
   return (
     <div className={styles.page}>
       
-      {/* Left/Center Column: Banners, Regions, Stats, News, Map */}
-      <div className={styles.mainContent}>
-        {/* Banner Carousel */}
-        <div className={styles.bannerSection}>
-          <div className={styles.bannerTrack}>
-            {(bannersList.length > 0 ? bannersList : banners).map((banner, index) => (
-              <div
-                key={banner.id}
-                className={`${styles.banner} ${
-                  index === currentBanner ? styles.bannerActive : ''
-                }`}
-                style={{ 
-                  background: banner.imageUrl 
-                    ? `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url(${banner.imageUrl}) center/cover no-repeat` 
-                    : banner.gradient 
-                }}
-                onClick={() => banner.url && window.open(banner.url, '_blank')}
-              >
-                <p className={styles.bannerText}>{banner.text}</p>
+      {/* 1. Full-Width Banner Carousel */}
+      <div className={styles.bannerSection}>
+        <div className={styles.bannerTrack}>
+          {(bannersList.length > 0 ? bannersList : banners).map((banner, index) => (
+            <div
+              key={banner.id}
+              className={`${styles.banner} ${
+                index === currentBanner ? styles.bannerActive : ''
+              }`}
+              style={{ 
+                background: banner.imageUrl 
+                  ? `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${banner.imageUrl}) center/cover no-repeat` 
+                  : banner.gradient 
+              }}
+              onClick={() => banner.url && window.open(banner.url, '_blank')}
+            >
+              <div className={styles.bannerContent}>
+                <h2 className={styles.bannerHeadline}>{banner.text}</h2>
+                {banner.subheadline && (
+                  <p className={styles.bannerSubheadline}>{banner.subheadline}</p>
+                )}
+                {banner.ctaText && (
+                  <button 
+                    className={styles.bannerCta}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent triggering the main banner click
+                      const targetLink = banner.pdfUrl || banner.url;
+                      if (targetLink && targetLink !== '#') {
+                        window.open(targetLink, '_blank');
+                      }
+                    }}
+                  >
+                    {banner.ctaText}
+                  </button>
+                )}
               </div>
-            ))}
-          </div>
-          <div className={styles.dots}>
-            {(bannersList.length > 0 ? bannersList : banners).map((_, index) => (
-              <button
-                key={index}
-                className={`${styles.dot} ${
-                  index === currentBanner ? styles.dotActive : ''
-                }`}
-                onClick={() => setCurrentBanner(index)}
-                aria-label={`Banner ${index + 1}`}
-              />
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-
-        {/* Regions Grid Section */}
-        <section className={styles.section} style={{ padding: '0 1.5rem', marginTop: '16px' }}>
-          <h2 className={styles.sectionTitle}>Escolha uma região</h2>
-          <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'center' }}>
-            <InteractiveMap 
-              regioes={regioes}
-              onRegionClick={(reg) => navigate('/consultar-sinodais', { state: { initialRegion: reg } })}
+        <div className={styles.dots}>
+          {(bannersList.length > 0 ? bannersList : banners).map((_, index) => (
+            <button
+              key={index}
+              className={`${styles.dot} ${
+                index === currentBanner ? styles.dotActive : ''
+              }`}
+              onClick={() => setCurrentBanner(index)}
+              aria-label={`Banner ${index + 1}`}
             />
-          </div>
-        </section>
-
-        {/* Statistics Section */}
-        <section className={styles.section} style={{ marginTop: '16px' }}>
-          <h2 className={styles.sectionTitle}>Estatísticas</h2>
-          {loading ? (
-            <p style={{ padding: '0 1.5rem' }}>Carregando...</p>
-          ) : error ? (
-            <p style={{ padding: '0 1.5rem', color: 'red' }}>Erro ao carregar dados.</p>
-          ) : (
-            <div className={styles.statsRow}>
-              <StatCard
-                label="Sinodais - Ativas"
-                value={stats.sinodaisAtivas}
-                variant="dark"
-                onClick={() => handleOpenModal('ativas')}
-              />
-              <StatCard
-                label="Sinodais - Inativas"
-                value={stats.sinodaisInativas}
-                variant="inactive"
-                onClick={() => handleOpenModal('inativas')}
-              />
-              <StatCard
-                label="Feds."
-                value={stats.federacoes}
-                variant="medium"
-                onClick={() => handleOpenModal('federacoes')}
-              />
-              <StatCard
-                label="UPHs"
-                value={stats.uphs}
-                variant="olive"
-                onClick={() => handleOpenModal('uphs')}
-              />
-              <StatCard
-                label="Sócios"
-                value={stats.socios}
-                variant="green"
-                onClick={() => handleOpenModal('socios')}
-              />
-            </div>
-          )}
-        </section>
-
-        {/* Latest News Section */}
-        <section className={styles.section} style={{ marginTop: '16px' }}>
-          <h2 className={styles.sectionTitle}>Últimas notícias</h2>
-          {loading ? (
-            <p style={{ padding: '0 1.5rem' }}>Carregando...</p>
-          ) : error ? (
-            <p style={{ padding: '0 1.5rem', color: 'red' }}>Erro ao carregar dados.</p>
-          ) : (
-            <div className={styles.newsScroll}>
-              {noticiasData.map((noticia) => (
-                <NewsCard
-                  key={noticia.id}
-                  titulo={noticia.titulo}
-                  data={noticia.data_publicacao || noticia.data}
-                  imagem={noticia.imagem_url || noticia.imagem}
-                  variant="horizontal"
-                />
-              ))}
-            </div>
-          )}
-        </section>
-
-
+          ))}
+        </div>
       </div>
 
-      {/* Right Column: Aniversariantes do Mês */}
-      <div className={styles.sideContent}>
-        {/* Aniversariantes Section */}
-        <section className={styles.section} style={{ padding: '0 1.5rem', marginBottom: '2rem' }}>
-          <h2 className={styles.sectionTitle}>Aniversariantes do Dia</h2>
-          {loading ? (
-            <p>Carregando...</p>
-          ) : error ? (
-            <p style={{ color: 'red' }}>Erro ao carregar dados.</p>
-          ) : (
-            <BirthdayList membros={aniversariantes} />
-          )}
-        </section>
+      {/* 2. Columns Layout (Grid on Desktop, Stack on Mobile) */}
+      <div className={styles.columnsContainer}>
+        {/* Left/Center Column: Map, Stats, News */}
+        <div className={styles.mainContent}>
+          {/* Regions Map Section */}
+          <section className={styles.section}>
+            <InteractiveMap 
+              onRegionClick={(reg) => navigate('/consultar-sinodais', { state: { initialRegion: reg } })}
+            />
+          </section>
+
+          {/* Statistics Section */}
+          <section className={styles.section} style={{ marginTop: '16px' }}>
+            <h2 className={styles.sectionTitle}>Estatísticas</h2>
+            {loading ? (
+              <p style={{ padding: '0 1.5rem' }}>Carregando...</p>
+            ) : error ? (
+              <p style={{ padding: '0 1.5rem', color: 'red' }}>Erro ao carregar dados.</p>
+            ) : (
+              <div className={styles.statsRow}>
+                <StatCard
+                  label="Sinodais - Ativas"
+                  value={stats.sinodaisAtivas}
+                  variant="dark"
+                  onClick={() => handleOpenModal('ativas')}
+                />
+                <StatCard
+                  label="Sinodais - Inativas"
+                  value={stats.sinodaisInativas}
+                  variant="inactive"
+                  onClick={() => handleOpenModal('inativas')}
+                />
+                <StatCard
+                  label="Feds."
+                  value={stats.federacoes}
+                  variant="medium"
+                  onClick={() => handleOpenModal('federacoes')}
+                />
+                <StatCard
+                  label="UPHs"
+                  value={stats.uphs}
+                  variant="olive"
+                  onClick={() => handleOpenModal('uphs')}
+                />
+                <StatCard
+                  label="Sócios"
+                  value={stats.socios}
+                  variant="green"
+                  onClick={() => handleOpenModal('socios')}
+                />
+              </div>
+            )}
+          </section>
+
+          {/* Latest News Section */}
+          <section className={styles.section} style={{ marginTop: '16px' }}>
+            <h2 className={styles.sectionTitle}>Últimas notícias</h2>
+            {loading ? (
+              <p style={{ padding: '0 1.5rem' }}>Carregando...</p>
+            ) : error ? (
+              <p style={{ padding: '0 1.5rem', color: 'red' }}>Erro ao carregar dados.</p>
+            ) : (
+              <div className={styles.newsScroll}>
+                {noticiasData.map((noticia) => (
+                  <NewsCard
+                    key={noticia.id}
+                    titulo={noticia.titulo}
+                    data={noticia.data_publicacao || noticia.data}
+                    imagem={noticia.imagem_url || noticia.imagem}
+                    variant="horizontal"
+                  />
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
+
+        {/* Right Column: Aniversariantes do Dia */}
+        <div className={styles.sideContent}>
+          {/* Aniversariantes Section */}
+          <section className={styles.section} style={{ marginBottom: '2rem' }}>
+            <h2 className={styles.sectionTitle} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <MdCake size={22} style={{ color: 'var(--color-primary)' }} />
+              Aniversariantes do Dia
+            </h2>
+            {loading ? (
+              <p>Carregando...</p>
+            ) : error ? (
+              <p style={{ color: 'red' }}>Erro ao carregar dados.</p>
+            ) : (
+              <BirthdayList membros={aniversariantes} />
+            )}
+          </section>
+        </div>
       </div>
 
       {/* Dynamic Drill-down Modal overlay */}

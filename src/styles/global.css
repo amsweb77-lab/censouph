@@ -225,3 +225,20 @@ input, select, textarea {
 .slide-up {
   animation: slideUp var(--transition-slow) forwards;
 }
+
+/* Special rules for Mapa IPB page to ensure full screen map readability */
+main.mapa-ipb-main {
+  padding: 0 !important;
+  margin: 0 !important;
+  height: calc(100vh - var(--appbar-height)) !important; /* Mobile appbar is 56px */
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+@media (min-width: 768px) {
+  main.mapa-ipb-main {
+    height: 100vh !important; /* No mobile appbar on desktop/tablet */
+    padding: 0 !important;
+  }
+}

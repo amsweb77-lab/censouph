@@ -20,6 +20,7 @@ import ConsultarUPHs from './pages/ConsultarUPHs/ConsultarUPHs'
 import Tesouraria from './pages/Tesouraria/Tesouraria'
 import MapaIPB from './pages/MapaIPB/MapaIPB'
 import GerenciarBanners from './pages/GerenciarBanners/GerenciarBanners'
+import RelatorioEstatistica from './pages/RelatorioEstatistica/RelatorioEstatistica'
 
 const pageTitles = {
   '/': 'SECNHP - Secretário Executivo da Confederação Nacional de Homens Presbiterianos',
@@ -40,11 +41,13 @@ const pageTitles = {
   '/consultar-uphs': 'Consulta de UPHs',
   '/mapa-ipb': 'Mapa IPB',
   '/gerenciar-banners': 'Gerenciar Banners',
+  '/relatorio-estatistica': 'Formulário de Estatística',
 }
 
 function App() {
   const location = useLocation()
   const currentTitle = pageTitles[location.pathname] || 'SECNHP - Secretário Executivo da Confederação Nacional de Homens Presbiterianos'
+  const isMapIPB = location.pathname === '/mapa-ipb'
 
   // Mobile hamburger menu state
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -66,10 +69,13 @@ function App() {
           onMenuToggle={() => setMobileMenuOpen(true)}
         />
 
-        <main style={{
-          flex: 1,
-          paddingBottom: 'var(--bottom-nav-height)',
-        }}>
+        <main 
+          className={isMapIPB ? 'mapa-ipb-main' : ''}
+          style={{
+            flex: 1,
+            paddingBottom: isMapIPB ? '0' : 'var(--bottom-nav-height)',
+          }}
+        >
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/cnhp" element={<CNHP />} />
@@ -91,6 +97,7 @@ function App() {
             <Route path="/consultar-federacoes" element={<ConsultarFederacoes />} />
             <Route path="/consultar-uphs" element={<ConsultarUPHs />} />
             <Route path="/mapa-ipb" element={<MapaIPB />} />
+            <Route path="/relatorio-estatistica" element={<RelatorioEstatistica />} />
           </Routes>
         </main>
 

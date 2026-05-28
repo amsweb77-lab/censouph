@@ -3,12 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import styles from './CadastroFederacao.module.css';
 import { supabase } from '../../lib/supabaseClient';
 
-const mockEstados = [
-  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 
-  'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 
-  'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
-];
-
 export default function CadastroFederacao() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -24,14 +18,26 @@ export default function CadastroFederacao() {
 
   useEffect(() => {
     async function fetchSinodais() {
-      const { data } = await supabase.from('sinodais').select('id, nome');
+      const { data } = await supabase.from('sinodais').select('id, nome, uf');
       if (data) setSinodais(data);
     }
     fetchSinodais();
   }, []);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === 'sinodal_id') {
+      // Ao selecionar uma sinodal, preenche automaticamente o Estado com o UF
+      const sinodal = sinodais.find(s => String(s.id) === String(value));
+      setFormData(prev => ({
+        ...prev,
+        sinodal_id: value,
+        estado: sinodal?.uf ?? ''
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -82,17 +88,28 @@ export default function CadastroFederacao() {
 
         <div className={styles.inputGroup}>
           <label className={styles.label} htmlFor="estado">Estado</label>
-          <select 
-            id="estado" 
-            name="estado" 
-            className={styles.select} 
-            value={formData.estado} 
-            onChange={handleChange} 
+          <input
+            type="text"
+            id="estado"
+            name="estado"
+            className={styles.input}
+            value={formData.estado}
+            readOnly
+            placeholder={formData.sinodal_id ? '' : 'Preenchido automaticamente pela sinodal'}
+            title="Preenchido automaticamente ao selecionar a sinodal"
+            style={{
+              backgroundColor: formData.estado ? '#e8f5e9' : '#f5f5f5',
+              color: formData.estado ? '#2e7d32' : '#999',
+              cursor: 'default',
+              fontWeight: formData.estado ? '600' : '400'
+            }}
             required
-          >
-            <option value="">Selecione um estado</option>
-            {mockEstados.map(e => <option key={e} value={e}>{e}</option>)}
-          </select>
+          />
+          {formData.estado && (
+            <span style={{ fontSize: '11px', color: '#2e7d32', marginTop: '4px', display: 'block' }}>
+              ✓ Vinculado à sinodal selecionada
+            </span>
+          )}
         </div>
 
         <div className={styles.inputGroup}>

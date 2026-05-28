@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
 import { MdArrowBack, MdChevronRight } from 'react-icons/md';
 import styles from './ConsultarSinodais.module.css';
-import InteractiveMap from '../../components/InteractiveMap/InteractiveMap';
 
 export default function ConsultarSinodais() {
   const navigate = useNavigate();
@@ -28,6 +27,18 @@ export default function ConsultarSinodais() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Drill down states inside Sinodal
+  const [selectedFederacao, setSelectedFederacao] = useState(null);
+  const [federacaoStats, setRegionStatsFederacao] = useState({ uphs: 0, socios: 0 });
+  const [federacaoUphs, setFederacaoUphs] = useState([]);
+  const [federacaoDiretoria, setFederacaoDiretoria] = useState([]);
+  const [fedActiveTab, setFedActiveTab] = useState('diretoria');
+
+  const [selectedUph, setSelectedUph] = useState(null);
+  const [uphDiretoria, setUphDiretoria] = useState([]);
+  const [uphStats, setUphStats] = useState({ socios: 0 });
+  const [uphActiveTab, setUphActiveTab] = useState('diretoria');
+
   // Load regions on mount
   useEffect(() => {
     async function loadRegioes() {
@@ -35,7 +46,7 @@ export default function ConsultarSinodais() {
         const { data, error } = await supabase.from('regioes').select('*');
         if (error) throw error;
         if (data) {
-          const customOrder = ['Norte I', 'Norte II', 'Nordeste', 'Centro-Oeste', 'Sul', 'Sudeste I', 'Sudeste II'];
+          const customOrder = ['Centro-Oeste', 'Nordeste', 'Norte I', 'Norte II', 'Sudeste I', 'Sudeste II', 'Sul'];
           const sorted = [...data].sort((a, b) => {
             const indexA = customOrder.indexOf(a.nome);
             const indexB = customOrder.indexOf(b.nome);
@@ -193,9 +204,101 @@ export default function ConsultarSinodais() {
     }
   };
 
+  // Handle select Federação inside Sinodal drill-down
+  const handleSelectFederacao = async (fed) => {
+    setSelectedFederacao(fed);
+    setStep('federacao_details');
+    setFedActiveTab('diretoria');
+    setLoading(true);
+    setError(null);
+
+    try {
+      // 1. Fetch UPHs under this Federação
+      const { data: uphsData, error: uErr } = await supabase
+        .from('uphs')
+        .select('*')
+        .eq('federacao_id', fed.id)
+        .order('nome_igreja');
+      if (uErr) throw uErr;
+      setFederacaoUphs(uphsData || []);
+
+      // 2. Fetch Board of Directors for this Federação
+      const { data: dirData, error: dirErr } = await supabase
+        .from('membros_diretoria')
+        .select('*')
+        .eq('tipo_entidade', 'federacao')
+        .eq('entidade_id', fed.id);
+      if (dirErr) throw dirErr;
+      
+      const order = ['Presidente', 'Vice-Presidente', 'Secretário Executivo', 'Tesoureiro'];
+      const sortedDir = (dirData || []).sort((a, b) => {
+        const indexA = order.indexOf(a.cargo);
+        const indexB = order.indexOf(b.cargo);
+        return (indexA === -1 ? 99 : indexA) - (indexB === -1 ? 99 : indexB);
+      });
+      setFederacaoDiretoria(sortedDir);
+
+      // 3. Calculate Stats
+      const uCount = uphsData?.length || 0;
+      const sSum = (uphsData || []).reduce((acc, curr) => acc + (curr.numero_socios || 0), 0);
+
+      setRegionStatsFederacao({
+        uphs: uCount,
+        socios: sSum
+      });
+
+    } catch (err) {
+      console.error(err);
+      setError('Erro ao carregar detalhes da Federação.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle select UPH inside Sinodal drill-down
+  const handleSelectUph = async (uph) => {
+    setSelectedUph(uph);
+    setStep('uph_details');
+    setUphActiveTab('diretoria');
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Fetch Board of Directors for UPH
+      const { data: dirData, error: dirErr } = await supabase
+        .from('membros_diretoria')
+        .select('*')
+        .eq('tipo_entidade', 'uph')
+        .eq('entidade_id', uph.id);
+      if (dirErr) throw dirErr;
+      
+      const order = ['Presidente', 'Vice-Presidente', 'Secretário Executivo', 'Tesoureiro'];
+      const sortedDir = (dirData || []).sort((a, b) => {
+        const indexA = order.indexOf(a.cargo);
+        const indexB = order.indexOf(b.cargo);
+        return (indexA === -1 ? 99 : indexA) - (indexB === -1 ? 99 : indexB);
+      });
+      setUphDiretoria(sortedDir);
+
+      setUphStats({
+        socios: uph.numero_socios || 0
+      });
+
+    } catch (err) {
+      console.error(err);
+      setError('Erro ao carregar detalhes da UPH.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Back navigation handler
   const handleBack = () => {
-    if (step === 'sinodal_details') {
+    if (step === 'uph_details') {
+      setStep('federacao_details');
+    } else if (step === 'federacao_details') {
+      setStep('sinodal_details');
+    } else if (step === 'sinodal_details') {
       setStep('sinodais_list');
     } else if (step === 'sinodais_list') {
       setStep('regions');
@@ -213,7 +316,7 @@ export default function ConsultarSinodais() {
           <MdArrowBack size={24} />
         </button>
         <span className={styles.headerTitle}>
-          {step === 'sinodal_details' ? 'Informações' : 'Consultar Sinodais'}
+          {step === 'uph_details' ? 'Informações' : step === 'federacao_details' ? 'Informações' : 'Consultar Sinodais'}
         </span>
       </div>
 
@@ -223,11 +326,16 @@ export default function ConsultarSinodais() {
           <>
             <h1 className={styles.mainTitle}>CONFEDERAÇÕES SINODAIS</h1>
             <h2 className={styles.subTitle}>Escolha uma região</h2>
-            <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-              <InteractiveMap 
-                regioes={regioes}
-                onRegionClick={handleSelectRegion}
-              />
+            <div className={styles.regionsGrid}>
+              {regioes.map((reg) => (
+                <button
+                  key={reg.id}
+                  className={styles.regionBtn}
+                  onClick={() => handleSelectRegion(reg)}
+                >
+                  {reg.nome === 'Norte I' ? 'Norte 1' : reg.nome === 'Norte II' ? 'Norte 2' : reg.nome === 'Sudeste I' ? 'Sudeste 1' : reg.nome === 'Sudeste II' ? 'Sudeste 2' : reg.nome}
+                </button>
+              ))}
             </div>
           </>
         )}
@@ -352,7 +460,7 @@ export default function ConsultarSinodais() {
               <p className={styles.loading}>Carregando...</p>
             ) : activeTab === 'diretoria' ? (
               <div className={styles.tabContent}>
-                <h3 className={styles.tabSectionTitle}>Diretoria 2025 - 2027</h3>
+                <h3 className={styles.tabSectionTitle}>Diretoria 2026 - 2027</h3>
                 {sinodalDiretoria.length === 0 ? (
                   <p className={styles.empty}>Nenhum membro da diretoria cadastrado.</p>
                 ) : (
@@ -374,15 +482,168 @@ export default function ConsultarSinodais() {
                 ) : (
                   <div className={styles.itemsList}>
                     {sinodalFederacoes.map((fed) => (
-                      <div key={fed.id} className={`${styles.listItem} ${fed.situacao === 'inativa' ? styles.listItemInactive : ''}`} style={{ cursor: 'default' }}>
+                      <button 
+                        key={fed.id} 
+                        className={`${styles.listItem} ${fed.situacao === 'inativa' ? styles.listItemInactive : ''}`}
+                        onClick={() => handleSelectFederacao(fed)}
+                      >
                         <span className={styles.listItemName}>
                           <strong>{fed.sigla}</strong> - {fed.nome}
                         </span>
-                        <MdChevronRight size={24} className={styles.chevron} style={{ opacity: 0.3 }} />
+                        <MdChevronRight size={24} className={styles.chevron} />
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ================= STEP 4: FEDERACAO DETAILS ================= */}
+        {step === 'federacao_details' && selectedFederacao && (
+          <>
+            <h1 className={styles.mainTitle}>FEDERAÇÃO DE HOMENS</h1>
+            <h2 className={styles.subTitle}>{selectedFederacao.nome} - {selectedFederacao.sigla}</h2>
+
+            <div className={styles.statsCard}>
+              <h3 className={styles.statsCardTitle}>Estatísticas</h3>
+              <div className={styles.statsRowTwo}>
+                <div className={styles.statBox} style={{ backgroundColor: '#388E3C' }}>
+                  <span className={styles.statLabel}>UPHs</span>
+                  <span className={styles.statVal}>{federacaoStats.uphs}</span>
+                </div>
+                <div className={styles.statBox} style={{ backgroundColor: '#4CAF50' }}>
+                  <span className={styles.statLabel}>Sócios</span>
+                  <span className={styles.statVal}>{federacaoStats.socios}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.tabContainer}>
+              <button 
+                className={`${styles.tabBtn} ${fedActiveTab === 'diretoria' ? styles.tabBtnActive : ''}`}
+                onClick={() => setFedActiveTab('diretoria')}
+              >
+                Diretoria
+              </button>
+              <button 
+                className={`${styles.tabBtn} ${fedActiveTab === 'uphs' ? styles.tabBtnActive : ''}`}
+                onClick={() => setFedActiveTab('uphs')}
+              >
+                UPHs
+              </button>
+            </div>
+
+            {loading ? (
+              <p className={styles.loading}>Carregando...</p>
+            ) : fedActiveTab === 'diretoria' ? (
+              <div className={styles.tabContent}>
+                <h3 className={styles.tabSectionTitle}>Diretoria 2026 - 2027</h3>
+                {federacaoDiretoria.length === 0 ? (
+                  <p className={styles.empty}>Nenhum membro da diretoria cadastrado para esta Federação.</p>
+                ) : (
+                  <div className={styles.diretoriaList}>
+                    {federacaoDiretoria.map((membro) => (
+                      <div key={membro.id} className={styles.membroCard}>
+                        <span className={styles.membroCargo}>{membro.cargo}</span>
+                        <span className={styles.membroNome}>{membro.nome}</span>
                       </div>
                     ))}
                   </div>
                 )}
+              </div>
+            ) : (
+              <div className={styles.tabContent}>
+                <h3 className={styles.tabSectionTitle}>UPHs Locais</h3>
+                {federacaoUphs.length === 0 ? (
+                  <p className={styles.empty}>Nenhuma UPH cadastrada.</p>
+                ) : (
+                  <div className={styles.itemsList}>
+                    {federacaoUphs.map((uph) => (
+                      <button 
+                        key={uph.id} 
+                        className={`${styles.listItem} ${uph.situacao === 'inativa' ? styles.listItemInactive : ''}`}
+                        onClick={() => handleSelectUph(uph)}
+                      >
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <span className={styles.listItemName} style={{ fontWeight: '700' }}>
+                            {uph.nome_igreja}
+                          </span>
+                          <span style={{ fontSize: '12px', opacity: 0.8, fontWeight: '500' }}>
+                            {selectedFederacao.sigla} - {selectedFederacao.nome} | {selectedSinodal.sigla}
+                          </span>
+                        </div>
+                        <MdChevronRight size={24} className={styles.chevron} />
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ================= STEP 5: UPH DETAILS ================= */}
+        {step === 'uph_details' && selectedUph && (
+          <>
+            <h1 className={styles.mainTitle}>DETALHES DA UPH</h1>
+            <h2 className={styles.subTitle}>{selectedUph.nome_igreja}</h2>
+
+            <div className={styles.statsCard}>
+              <h3 className={styles.statsCardTitle}>Sócios Ativos</h3>
+              <div className={styles.statBoxSingle} style={{ backgroundColor: '#1B5E20', borderRadius: '10px', padding: '14px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#FFFFFF', width: '100%', boxSizing: 'border-box' }}>
+                <span style={{ fontSize: '12px', fontWeight: '700', opacity: '0.95', marginBottom: '4px', textTransform: 'uppercase' }}>Número de Sócios</span>
+                <span style={{ fontSize: '24px', fontWeight: '900' }}>{uphStats.socios}</span>
+              </div>
+            </div>
+
+            <div className={styles.tabContainer}>
+              <button 
+                className={`${styles.tabBtn} ${uphActiveTab === 'diretoria' ? styles.tabBtnActive : ''}`}
+                onClick={() => setUphActiveTab('diretoria')}
+              >
+                Diretoria
+              </button>
+              <button 
+                className={`${styles.tabBtn} ${uphActiveTab === 'info' ? styles.tabBtnActive : ''}`}
+                onClick={() => setUphActiveTab('info')}
+              >
+                Informações
+              </button>
+            </div>
+
+            {loading ? (
+              <p className={styles.loading}>Carregando...</p>
+            ) : uphActiveTab === 'diretoria' ? (
+              <div className={styles.tabContent}>
+                <h3 className={styles.tabSectionTitle}>Diretoria 2026 - 2027</h3>
+                {uphDiretoria.length === 0 ? (
+                  <p className={styles.empty}>Nenhum membro da diretoria cadastrado para esta UPH.</p>
+                ) : (
+                  <div className={styles.diretoriaList}>
+                    {uphDiretoria.map((membro) => (
+                      <div key={membro.id} className={styles.membroCard}>
+                        <span className={styles.membroCargo}>{membro.cargo}</span>
+                        <span className={styles.membroNome}>{membro.nome}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className={styles.tabContent}>
+                <h3 className={styles.tabSectionTitle}>Informações Gerais</h3>
+                <div className={styles.membroCard}>
+                  <span className={styles.membroCargo}>Federação</span>
+                  <span className={styles.membroNome}>{selectedFederacao.nome}</span>
+                </div>
+                <div className={styles.membroCard} style={{ marginTop: '8px' }}>
+                  <span className={styles.membroCargo}>Data de Cadastro</span>
+                  <span className={styles.membroNome}>
+                    {new Date(selectedUph.created_at).toLocaleDateString('pt-BR')}
+                  </span>
+                </div>
               </div>
             )}
           </>

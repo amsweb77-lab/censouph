@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import {
   MdDashboard,
   MdBarChart,
@@ -16,6 +16,7 @@ import {
   MdAccountBalanceWallet,
   MdClose,
   MdMap,
+  MdSettings,
 } from 'react-icons/md';
 import { useAuth } from '../../contexts/AuthContext';
 import styles from './Sidebar.module.css';
@@ -30,6 +31,25 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
   const [ceDocsOpen, setCeDocsOpen] = useState(false);
   const [congressosOpen, setCongressosOpen] = useState(false);
   const [projetosOpen, setProjetosOpen] = useState(false);
+
+  const location = useLocation();
+  const isFormulariosActive = location.pathname === '/relatorio-estatistica' || location.pathname === '/formularios';
+  const [formulariosOpen, setFormulariosOpen] = useState(isFormulariosActive);
+
+  const isAdminActive = location.pathname === '/gerenciar-banners';
+  const [adminOpen, setAdminOpen] = useState(isAdminActive);
+
+  useEffect(() => {
+    if (isExpanded && isFormulariosActive) {
+      setFormulariosOpen(true);
+    }
+  }, [isExpanded, isFormulariosActive]);
+
+  useEffect(() => {
+    if (isExpanded && isAdminActive) {
+      setAdminOpen(true);
+    }
+  }, [isExpanded, isAdminActive]);
 
   const handleDeepItemClick = (label) => {
     navigate('/downloads', { state: { filter: label } });
@@ -49,9 +69,7 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
   ];
 
   const secondaryItems = [
-    { label: 'Formulários', path: '/formularios', icon: <MdAssignment size={20} /> },
     { label: 'Tesouraria', path: '/tesouraria', icon: <MdAccountBalanceWallet size={20} /> },
-    ...(user ? [{ label: 'Gerenciar Banners', path: '/gerenciar-banners', icon: <MdAssignment size={20} /> }] : []),
   ];
 
   return (
@@ -75,6 +93,8 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
           setCeDocsOpen(false);
           setCongressosOpen(false);
           setProjetosOpen(false);
+          setFormulariosOpen(false);
+          setAdminOpen(false);
         }}
         aria-label="Menu de navegação"
       >
@@ -205,6 +225,48 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
             )}
           </div>
 
+          {/* Collapsible Formulários Submenu */}
+          <div className={styles.submenuContainer}>
+            <button
+              onClick={() => setFormulariosOpen(!formulariosOpen)}
+              className={`${styles.submenuHeader} ${isFormulariosActive ? styles.submenuHeaderActive : ''}`}
+              type="button"
+            >
+              <span className={styles.icon}><MdAssignment size={20} /></span>
+              <span className={styles.label}>Formulários</span>
+              {(isExpanded || mobileOpen) && (
+                <span className={styles.toggleIcon}>
+                  {formulariosOpen ? <MdKeyboardArrowUp size={18} /> : <MdKeyboardArrowDown size={18} />}
+                </span>
+              )}
+            </button>
+
+            {formulariosOpen && (isExpanded || mobileOpen) && (
+              <div className={styles.nestedGroup}>
+                <NavLink
+                  to="/relatorio-estatistica"
+                  onClick={handleNavClick}
+                  className={({ isActive }) =>
+                    `${styles.nestedItem} ${isActive ? styles.navItemActive : ''}`
+                  }
+                >
+                  <span className={styles.icon}><MdAssignment size={16} /></span>
+                  <span className={styles.label}>Formulário de Estatística</span>
+                </NavLink>
+                <NavLink
+                  to="/formularios"
+                  onClick={handleNavClick}
+                  className={({ isActive }) =>
+                    `${styles.nestedItem} ${isActive ? styles.navItemActive : ''}`
+                  }
+                >
+                  <span className={styles.icon}><MdFolderOpen size={16} /></span>
+                  <span className={styles.label}>Outros Formulários</span>
+                </NavLink>
+              </div>
+            )}
+          </div>
+
           {secondaryItems.map((item) => (
             <NavLink
               key={item.path}
@@ -218,6 +280,40 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
               <span className={styles.label}>{item.label}</span>
             </NavLink>
           ))}
+
+          {/* Collapsible Adm Submenu */}
+          {user && (
+            <div className={styles.submenuContainer}>
+              <button
+                onClick={() => setAdminOpen(!adminOpen)}
+                className={`${styles.submenuHeader} ${isAdminActive ? styles.submenuHeaderActive : ''}`}
+                type="button"
+              >
+                <span className={styles.icon}><MdSettings size={20} /></span>
+                <span className={styles.label}>Adm</span>
+                {(isExpanded || mobileOpen) && (
+                  <span className={styles.toggleIcon}>
+                    {adminOpen ? <MdKeyboardArrowUp size={18} /> : <MdKeyboardArrowDown size={18} />}
+                  </span>
+                )}
+              </button>
+
+              {adminOpen && (isExpanded || mobileOpen) && (
+                <div className={styles.nestedGroup}>
+                  <NavLink
+                    to="/gerenciar-banners"
+                    onClick={handleNavClick}
+                    className={({ isActive }) =>
+                      `${styles.nestedItem} ${isActive ? styles.navItemActive : ''}`
+                    }
+                  >
+                    <span className={styles.icon}><MdAssignment size={16} /></span>
+                    <span className={styles.label}>Gerenciar Banners</span>
+                  </NavLink>
+                </div>
+              )}
+            </div>
+          )}
         </nav>
 
         {/* Footer / Login Actions */}
@@ -225,7 +321,7 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
           {user ? (
             <button onClick={() => { signOut(); handleNavClick(); }} className={`${styles.actionBtn} ${styles.logout}`}>
               <MdLogout size={20} />
-              <span>Sair do Censo</span>
+              <span>Sair</span>
             </button>
           ) : (
             <NavLink

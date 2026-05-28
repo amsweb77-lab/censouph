@@ -1,18 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MdArrowBack, MdDelete, MdAdd, MdSave } from 'react-icons/md';
+import { MdArrowBack, MdDelete, MdAdd, MdSave, MdFileUpload, MdEdit } from 'react-icons/md';
 import styles from './GerenciarBanners.module.css';
 
 // Default initial banners if localStorage is empty
 const defaultBanners = [
   {
     id: 1,
+    text: 'XVI CONGRESSO DA CNHP',
+    subheadline: 'Confira o Resumo Oficial: Destaques, comissões e os rumos definidos em nosso encontro.',
+    ctaText: 'Baixar Boletim Completo',
+    gradient: 'linear-gradient(135deg, #1B5E20 0%, #0D47A1 100%)',
+    url: 'https://online.fliphtml5.com/CNHP2026/XVI-BOLETIM-INFORMATIVO/#p=1',
+    pdfUrl: 'https://online.fliphtml5.com/CNHP2026/XVI-BOLETIM-INFORMATIVO/#p=1',
+  },
+  {
+    id: 2,
     text: 'CLIQUE AQUI E CONHEÇA A NOVA Revista da UPH',
     gradient: 'linear-gradient(135deg, #1B5E20 0%, #0D47A1 100%)',
     url: 'https://www.uph.org.br/revista-da-uph',
   },
   {
-    id: 2,
+    id: 3,
     text: 'VISITE O SITE OFICIAL DA UPH',
     gradient: 'linear-gradient(135deg, #0D47A1 0%, #1B5E20 100%)',
     url: 'https://www.uph.org.br',
@@ -27,50 +36,114 @@ const gradientOptions = [
   { label: 'Dourado Cerrado (Alerta)', value: 'linear-gradient(135deg, #FFC107 0%, #E65100 100%)' },
 ];
 
+// Helper to resize and compress uploaded images to prevent localStorage overflow
+const resizeAndCompressImage = (file, maxWidth = 1600, quality = 0.75) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        // Resize proportionally if width exceeds maxWidth
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert to optimized JPEG format
+        const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+        resolve(compressedBase64);
+      };
+      img.onerror = (err) => reject(err);
+    };
+    reader.onerror = (err) => reject(err);
+  });
+};
+
 export default function GerenciarBanners() {
   const navigate = useNavigate();
   const [banners, setBanners] = useState([]);
   
   // Form states
   const [text, setText] = useState('');
+  const [subheadline, setSubheadline] = useState('');
+  const [ctaText, setCtaText] = useState('');
   const [url, setUrl] = useState('');
+  const [pdfUrl, setPdfUrl] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [gradient, setGradient] = useState(gradientOptions[0].value);
   const [useImage, setUseImage] = useState(false);
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem('secnhp_banners');
+    const saved = localStorage.getItem('secnhp_banners_v3');
     if (saved) {
       setBanners(JSON.parse(saved));
     } else {
       setBanners(defaultBanners);
-      localStorage.setItem('secnhp_banners', JSON.stringify(defaultBanners));
+      localStorage.setItem('secnhp_banners_v3', JSON.stringify(defaultBanners));
     }
   }, []);
 
   const saveBanners = (updatedList) => {
     setBanners(updatedList);
-    localStorage.setItem('secnhp_banners', JSON.stringify(updatedList));
+    localStorage.setItem('secnhp_banners_v3', JSON.stringify(updatedList));
   };
 
   const handleAddBanner = (e) => {
     e.preventDefault();
     if (!text.trim()) return;
 
-    const newBanner = {
-      id: Date.now(),
-      text: text.trim(),
-      url: url.trim() || '#',
-      gradient: useImage ? 'none' : gradient,
-      imageUrl: useImage ? imageUrl.trim() : null
-    };
-
-    const updated = [...banners, newBanner];
-    saveBanners(updated);
+    if (editingId !== null) {
+      const updated = banners.map(b => {
+        if (b.id === editingId) {
+          return {
+            ...b,
+            text: text.trim(),
+            subheadline: subheadline.trim() || null,
+            ctaText: ctaText.trim() || null,
+            url: url.trim() || '#',
+            pdfUrl: pdfUrl.trim() || null,
+            gradient: useImage ? 'none' : gradient,
+            imageUrl: useImage ? imageUrl.trim() : null
+          };
+        }
+        return b;
+      });
+      saveBanners(updated);
+      setEditingId(null);
+    } else {
+      const newBanner = {
+        id: Date.now(),
+        text: text.trim(),
+        subheadline: subheadline.trim() || null,
+        ctaText: ctaText.trim() || null,
+        url: url.trim() || '#',
+        pdfUrl: pdfUrl.trim() || null,
+        gradient: useImage ? 'none' : gradient,
+        imageUrl: useImage ? imageUrl.trim() : null
+      };
+      const updated = [...banners, newBanner];
+      saveBanners(updated);
+    }
 
     // Reset Form
     setText('');
+    setSubheadline('');
+    setCtaText('');
     setUrl('');
+    setPdfUrl('');
     setImageUrl('');
     setUseImage(false);
   };
@@ -78,6 +151,47 @@ export default function GerenciarBanners() {
   const handleDeleteBanner = (id) => {
     const updated = banners.filter(b => b.id !== id);
     saveBanners(updated);
+    if (editingId === id) {
+      setEditingId(null);
+      setText('');
+      setSubheadline('');
+      setCtaText('');
+      setUrl('');
+      setPdfUrl('');
+      setImageUrl('');
+      setUseImage(false);
+    }
+  };
+
+  const handleEditClick = (banner) => {
+    setEditingId(banner.id);
+    setText(banner.text);
+    setSubheadline(banner.subheadline || '');
+    setCtaText(banner.ctaText || '');
+    setUrl(banner.url === '#' ? '' : (banner.url || ''));
+    setPdfUrl(banner.pdfUrl || '');
+    if (banner.imageUrl) {
+      setUseImage(true);
+      setImageUrl(banner.imageUrl);
+    } else {
+      setUseImage(false);
+      setGradient(banner.gradient || gradientOptions[0].value);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      // Automatically resize to max 1600px width and compress to 75% quality JPEG
+      const compressedDataUrl = await resizeAndCompressImage(file, 1600, 0.75);
+      setImageUrl(compressedDataUrl);
+    } catch (err) {
+      console.error('Erro ao processar imagem:', err);
+      alert('Ocorreu um erro ao processar a imagem. Por favor, tente outro arquivo.');
+    }
   };
 
   return (
@@ -98,14 +212,36 @@ export default function GerenciarBanners() {
           <h3 className={styles.cardTitle}>Novo Banner</h3>
           
           <div className={styles.formGroup}>
-            <label className={styles.label}>Informação (Texto Exibido)</label>
+            <label className={styles.label}>Título Principal (Headline / Texto Exibido)</label>
             <input 
               type="text" 
               className={styles.input}
-              placeholder="Ex: CLIQUE AQUI E CONHEÇA A NOVA Revista da UPH"
+              placeholder="Ex: XVI CONGRESSO DA CNHP"
               value={text}
               onChange={(e) => setText(e.target.value)}
               required
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Subtítulo (Subheadline - Opcional)</label>
+            <input 
+              type="text" 
+              className={styles.input}
+              placeholder="Ex: Confira o Resumo Oficial: Destaques, comissões..."
+              value={subheadline}
+              onChange={(e) => setSubheadline(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Texto do Botão / CTA (Opcional)</label>
+            <input 
+              type="text" 
+              className={styles.input}
+              placeholder="Ex: Ler Resumo em PDF"
+              value={ctaText}
+              onChange={(e) => setCtaText(e.target.value)}
             />
           </div>
 
@@ -114,9 +250,20 @@ export default function GerenciarBanners() {
             <input 
               type="url" 
               className={styles.input}
-              placeholder="Ex: https://www.uph.org.br/revista"
+              placeholder="Ex: https://online.fliphtml5.com/CNHP2026/XVI-BOLETIM-INFORMATIVO/#p=1"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Link de Download do PDF (Opcional - Usado no botão de ação)</label>
+            <input 
+              type="url" 
+              className={styles.input}
+              placeholder="Cole o link direto do arquivo PDF..."
+              value={pdfUrl}
+              onChange={(e) => setPdfUrl(e.target.value)}
             />
           </div>
 
@@ -153,15 +300,27 @@ export default function GerenciarBanners() {
             </div>
           ) : (
             <div className={styles.formGroup}>
-              <label className={styles.label}>URL da Foto/Imagem de Fundo</label>
-              <input 
-                type="url" 
-                className={styles.input}
-                placeholder="Ex: https://site.com/imagem.png"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                required={useImage}
-              />
+              <label className={styles.label}>Foto/Imagem de Fundo (Link ou Arquivo)</label>
+              <div className={styles.uploadContainer}>
+                <input 
+                  type="text" 
+                  className={styles.input}
+                  placeholder="Cole o link da imagem OU faça upload ao lado..."
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  required={useImage}
+                />
+                <label className={styles.uploadBtn}>
+                  <MdFileUpload size={20} />
+                  <span>Upload</span>
+                  <input 
+                    type="file" 
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    style={{ display: 'none' }}
+                  />
+                </label>
+              </div>
             </div>
           )}
 
@@ -171,19 +330,46 @@ export default function GerenciarBanners() {
             <div 
               className={styles.bannerPreview}
               style={{
-                background: useImage ? `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${imageUrl}) center/cover no-repeat` : gradient
+                background: useImage ? `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${imageUrl}) center/cover no-repeat` : gradient
               }}
             >
-              <span className={styles.previewText}>
-                {text || 'TEXTO DE PRÉ-VISUALIZAÇÃO DO BANNER'}
-              </span>
+              <div className={styles.previewContent}>
+                <span className={styles.previewHeadline}>
+                  {text || 'TEXTO DE PRÉ-VISUALIZAÇÃO DO BANNER'}
+                </span>
+                {subheadline && (
+                  <span className={styles.previewSubheadline}>{subheadline}</span>
+                )}
+                {ctaText && (
+                  <span className={styles.previewCtaBtn}>{ctaText}</span>
+                )}
+              </div>
             </div>
           </div>
 
-          <button type="submit" className={styles.submitBtn}>
-            <MdAdd size={20} />
-            <span>Adicionar Banner</span>
-          </button>
+          <div className={styles.actionButtonsRow}>
+            <button type="submit" className={styles.submitBtn}>
+              {editingId !== null ? <MdSave size={20} /> : <MdAdd size={20} />}
+              <span>{editingId !== null ? 'Salvar Alterações' : 'Adicionar Banner'}</span>
+            </button>
+            {editingId !== null && (
+              <button 
+                type="button" 
+                className={styles.cancelEditBtn}
+                onClick={() => {
+                  setEditingId(null);
+                  setText('');
+                  setSubheadline('');
+                  setCtaText('');
+                  setUrl('');
+                  setImageUrl('');
+                  setUseImage(false);
+                }}
+              >
+                Cancelar Edição
+              </button>
+            )}
+          </div>
         </form>
 
         {/* Existing Banners List */}
@@ -205,14 +391,24 @@ export default function GerenciarBanners() {
                   </div>
                   <div className={styles.bannerInfo}>
                     <span className={styles.bannerLink} title={banner.url}>{banner.url}</span>
-                    <button 
-                      className={styles.deleteBtn}
-                      onClick={() => handleDeleteBanner(banner.id)}
-                      aria-label="Excluir banner"
-                    >
-                      <MdDelete size={16} />
-                      <span>Excluir</span>
-                    </button>
+                    <div className={styles.bannerActions}>
+                      <button 
+                        className={styles.editBtn}
+                        onClick={() => handleEditClick(banner)}
+                        aria-label="Editar banner"
+                      >
+                        <MdEdit size={16} />
+                        <span>Editar</span>
+                      </button>
+                      <button 
+                        className={styles.deleteBtn}
+                        onClick={() => handleDeleteBanner(banner.id)}
+                        aria-label="Excluir banner"
+                      >
+                        <MdDelete size={16} />
+                        <span>Excluir</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}

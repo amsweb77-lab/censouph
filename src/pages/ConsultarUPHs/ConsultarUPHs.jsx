@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
 import { MdArrowBack, MdChevronRight } from 'react-icons/md';
 import styles from './ConsultarUPHs.module.css';
-import InteractiveMap from '../../components/InteractiveMap/InteractiveMap';
 
 export default function ConsultarUPHs() {
   const navigate = useNavigate();
@@ -33,7 +32,7 @@ export default function ConsultarUPHs() {
         const { data, error } = await supabase.from('regioes').select('*');
         if (error) throw error;
         if (data) {
-          const customOrder = ['Norte I', 'Norte II', 'Nordeste', 'Centro-Oeste', 'Sul', 'Sudeste I', 'Sudeste II'];
+          const customOrder = ['Centro-Oeste', 'Nordeste', 'Norte I', 'Norte II', 'Sudeste I', 'Sudeste II', 'Sul'];
           const sorted = [...data].sort((a, b) => {
             const indexA = customOrder.indexOf(a.nome);
             const indexB = customOrder.indexOf(b.nome);
@@ -169,11 +168,16 @@ export default function ConsultarUPHs() {
           <>
             <h1 className={styles.mainTitle}>UNIÃO PRESBITERIANA DE HOMENS</h1>
             <h2 className={styles.subTitle}>Escolha uma região</h2>
-            <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-              <InteractiveMap 
-                regioes={regioes}
-                onRegionClick={handleSelectRegion}
-              />
+            <div className={styles.regionsGrid}>
+              {regioes.map((reg) => (
+                <button
+                  key={reg.id}
+                  className={styles.regionBtn}
+                  onClick={() => handleSelectRegion(reg)}
+                >
+                  {reg.nome === 'Norte I' ? 'Norte 1' : reg.nome === 'Norte II' ? 'Norte 2' : reg.nome === 'Sudeste I' ? 'Sudeste 1' : reg.nome === 'Sudeste II' ? 'Sudeste 2' : reg.nome}
+                </button>
+              ))}
             </div>
           </>
         )}
@@ -272,7 +276,7 @@ export default function ConsultarUPHs() {
               <p className={styles.loading}>Carregando...</p>
             ) : activeTab === 'diretoria' ? (
               <div className={styles.tabContent}>
-                <h3 className={styles.tabSectionTitle}>Diretoria 2025 - 2027</h3>
+                <h3 className={styles.tabSectionTitle}>Diretoria 2026 - 2027</h3>
                 {uphDiretoria.length === 0 ? (
                   <p className={styles.empty}>Nenhum membro da diretoria cadastrado para esta UPH.</p>
                 ) : (
