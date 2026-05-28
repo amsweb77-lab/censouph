@@ -26,8 +26,16 @@ export function AuthProvider({ children }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  // Verifica se o usuário logado tem role de administrador
-  const isAdmin = user?.user_metadata?.role === 'admin'
+  // Verifica se o usuário logado é administrador:
+  // 1) e-mail configurado via VITE_ADMIN_EMAIL
+  // 2) user_metadata.role === 'admin'
+  // 3) app_metadata.role === 'admin'
+  const adminEmail = import.meta.env.VITE_ADMIN_EMAIL
+  const isAdmin =
+    (adminEmail && user?.email === adminEmail) ||
+    user?.user_metadata?.role === 'admin' ||
+    user?.app_metadata?.role === 'admin'
+
 
   const value = {
     session,
