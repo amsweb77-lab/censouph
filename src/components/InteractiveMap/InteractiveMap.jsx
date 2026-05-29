@@ -231,8 +231,10 @@ export default function InteractiveMap({ onRegionClick }) {
         <div className={styles.mapColumn}>
           {!loading && geojsonData ? (
             <MapContainer
-              center={[-14.235, -51.925]} // Centered on Brazil
-              zoom={4}
+              center={[-14.24, -54.5]} // Mathematically centered on Brazil's bounding box to prevent cutting Acre/Amazonas
+              zoom={3.8}
+              zoomSnap={0.1}
+              zoomDelta={0.1}
               style={{ width: '100%', height: '100%' }}
               zoomControl={true}
               scrollWheelZoom={false}
