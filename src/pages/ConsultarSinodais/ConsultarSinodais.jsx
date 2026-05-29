@@ -120,7 +120,8 @@ export default function ConsultarSinodais() {
         if (fIds.length > 0) {
           const { data: uphsData, error: uErr } = await supabase
             .from('uphs')
-            .select('numero_socios');
+            .select('numero_socios')
+            .in('federacao_id', fIds);
           if (!uErr && uphsData) {
             uCount = uphsData.length;
             sSum = uphsData.reduce((acc, curr) => acc + (curr.numero_socios || 0), 0);
