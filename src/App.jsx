@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import AppBar from './components/AppBar/AppBar'
 import Sidebar from './components/Sidebar/Sidebar'
+import Footer from './components/Footer/Footer'
 import Home from './pages/Home/Home'
 import CNHP from './pages/CNHP/CNHP'
 import Noticias from './pages/Noticias/Noticias'
@@ -101,6 +102,8 @@ function App() {
             <Route path="/relatorio-estatistica" element={<RelatorioEstatistica />} />
           </Routes>
         </main>
+
+        {!isMapIPB && <Footer />}
 
         {/* Bottom Nav removido — navegação feita pelo menu hambúrguer */}
       </div>
