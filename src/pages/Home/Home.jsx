@@ -110,7 +110,7 @@ export default function Home() {
         if (error) throw error;
         setModalData((data || []).map(f => ({
           title: `${f.sigla} - ${f.nome}`,
-          subtitle: `Sinodal: ${f.sinodais?.sigla || 'N/A'} | Mandato: ${f.inicio_mandato || 'N/A'} - ${f.fim_mandato || 'N/A'}`
+          subtitle: `Sinodal: ${f.sinodais?.sigla || 'N/A'} - ${f.estado || 'N/A'} | Mandato: ${f.inicio_mandato || 'N/A'} - ${f.fim_mandato || 'N/A'}`
         })));
       } else if (type === 'uphs') {
         setModalTitle('UPHs');
