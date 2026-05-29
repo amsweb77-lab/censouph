@@ -22,8 +22,8 @@ export default function Footer() {
           </div>
           <div className={styles.item}>
             <FaGlobe className={styles.icon} />
-            <a href="https://sites.google.com/site/secnhp/home" target="_blank" rel="noopener noreferrer" className={styles.link}>
-              https://sites.google.com/site/secnhp/home
+            <a href="https://secnhp.org" target="_blank" rel="noopener noreferrer" className={styles.link}>
+              https://secnhp.org
             </a>
           </div>
         </div>
