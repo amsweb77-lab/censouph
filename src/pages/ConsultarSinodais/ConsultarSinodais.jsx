@@ -4,12 +4,25 @@ import { supabase } from '../../lib/supabaseClient';
 import { MdArrowBack, MdChevronRight } from 'react-icons/md';
 import styles from './ConsultarSinodais.module.css';
 
+const stateNames = {
+  'AC': 'Acre', 'AL': 'Alagoas', 'AP': 'Amapá', 'AM': 'Amazonas',
+  'BA': 'Bahia', 'CE': 'Ceará', 'DF': 'Distrito Federal', 'ES': 'Espírito Santo',
+  'GO': 'Goiás', 'MA': 'Maranhão', 'MT': 'Mato Grosso', 'MS': 'Mato Grosso do Sul',
+  'MG': 'Minas Gerais', 'PA': 'Pará', 'PB': 'Paraíba', 'PR': 'Paraná',
+  'PE': 'Pernambuco', 'PI': 'Piauí', 'RJ': 'Rio de Janeiro', 'RN': 'Rio Grande do Norte',
+  'RS': 'Rio Grande do Sul', 'RO': 'Rondônia', 'RR': 'Roraima', 'SC': 'Santa Catarina',
+  'SP': 'São Paulo', 'SE': 'Sergipe', 'TO': 'Tocantins'
+};
+
 export default function ConsultarSinodais() {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Navigation steps: 'regions' | 'sinodais_list' | 'sinodal_details'
-  const [step, setStep] = useState('regions');
+  // Navigation steps: 'search_type' | 'regions' | 'states' | 'sinodais_list' | 'sinodal_details' | 'federacao_details' | 'uph_details'
+  const [step, setStep] = useState('search_type');
+  const [searchType, setSearchType] = useState('regiao'); // 'regiao' | 'estado'
+  const [states, setStates] = useState([]);
+  const [selectedState, setSelectedState] = useState('');
   
   const [regioes, setRegioes] = useState([]);
   const [selectedRegiao, setSelectedRegiao] = useState(null);
@@ -130,10 +143,99 @@ export default function ConsultarSinodais() {
     }
   };
 
+  const handleSelectSearchByState = async () => {
+    setStep('states');
+    setLoading(true);
+    setError(null);
+    try {
+      const { data, error: err } = await supabase
+        .from('federacoes')
+        .select('estado');
+      if (err) throw err;
+      
+      const uniqueStates = Array.from(new Set(data.map(f => f.estado).filter(Boolean))).sort();
+      setStates(uniqueStates);
+    } catch (err) {
+      console.error('Erro ao carregar estados:', err);
+      setError('Erro ao carregar estados.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSelectState = async (stateUf) => {
+    setSelectedState(stateUf);
+    setSelectedRegiao(null);
+    setStep('sinodais_list');
+    setLoading(true);
+    setError(null);
+    try {
+      const { data: fedData, error: fedErr } = await supabase
+        .from('federacoes')
+        .select('sinodal_id')
+        .eq('estado', stateUf);
+      if (fedErr) throw fedErr;
+
+      const sinodalIds = Array.from(new Set(fedData.map(f => f.sinodal_id).filter(Boolean)));
+      
+      let sinodaisData = [];
+      let fCount = 0;
+      let uCount = 0;
+      let sSum = 0;
+
+      if (sinodalIds.length > 0) {
+        const { data: sData, error: sErr } = await supabase
+          .from('sinodais')
+          .select('*')
+          .in('id', sinodalIds)
+          .order('nome');
+        if (sErr) throw sErr;
+        sinodaisData = sData || [];
+
+        const { count: fedCount, error: fErr } = await supabase
+          .from('federacoes')
+          .select('id', { count: 'exact', head: true })
+          .eq('estado', stateUf);
+        if (!fErr) fCount = fedCount || 0;
+
+        const { data: fData } = await supabase
+          .from('federacoes')
+          .select('id')
+          .eq('estado', stateUf);
+        const fIds = (fData || []).map(f => f.id);
+
+        if (fIds.length > 0) {
+          const { data: uphsData, error: uErr } = await supabase
+            .from('uphs')
+            .select('numero_socios')
+            .in('federacao_id', fIds);
+          if (!uErr && uphsData) {
+            uCount = uphsData.length;
+            sSum = uphsData.reduce((acc, curr) => acc + (curr.numero_socios || 0), 0);
+          }
+        }
+      }
+
+      setSinodais(sinodaisData);
+      setRegionStats({
+        sinodais: sinodaisData.length,
+        federacoes: fCount,
+        uphs: uCount,
+        socios: sSum
+      });
+    } catch (err) {
+      console.error(err);
+      setError('Erro ao carregar dados do estado.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (location.state?.initialRegion && regioes.length > 0) {
       const found = regioes.find(r => r.id === location.state.initialRegion.id || r.nome === location.state.initialRegion.nome);
       if (found) {
+        setSearchType('regiao');
         handleSelectRegion(found);
       }
     }
@@ -301,8 +403,18 @@ export default function ConsultarSinodais() {
     } else if (step === 'sinodal_details') {
       setStep('sinodais_list');
     } else if (step === 'sinodais_list') {
-      setStep('regions');
+      if (location.state?.initialRegion) {
+        navigate(-1);
+      } else {
+        if (searchType === 'regiao') {
+          setStep('regions');
+        } else {
+          setStep('states');
+        }
+      }
       setSearchTerm('');
+    } else if (step === 'regions' || step === 'states') {
+      setStep('search_type');
     } else {
       navigate(-1);
     }
@@ -321,6 +433,38 @@ export default function ConsultarSinodais() {
       </div>
 
       <div className={styles.container}>
+        {/* ================= STEP 0: SEARCH TYPE ================= */}
+        {step === 'search_type' && (
+          <div className={styles.searchTypeContainer}>
+            <h1 className={styles.mainTitle}>CONSULTAR SINODAIS</h1>
+            <h2 className={styles.subTitle}>Escolha o tipo de pesquisa</h2>
+            <div className={styles.searchTypeGrid}>
+              <button
+                className={styles.searchTypeBtn}
+                onClick={() => {
+                  setSearchType('regiao');
+                  setStep('regions');
+                }}
+              >
+                <span className={styles.searchTypeIcon}>🗺️</span>
+                <span className={styles.searchTypeTitle}>Pesquisar por Região</span>
+                <span className={styles.searchTypeDesc}>Navegue pelas grandes regiões do Brasil</span>
+              </button>
+              <button
+                className={styles.searchTypeBtn}
+                onClick={() => {
+                  setSearchType('estado');
+                  handleSelectSearchByState();
+                }}
+              >
+                <span className={styles.searchTypeIcon}>🇧🇷</span>
+                <span className={styles.searchTypeTitle}>Pesquisar por Estado</span>
+                <span className={styles.searchTypeDesc}>Navegue por Unidade Federativa (UF)</span>
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* ================= STEP 1: REGIONS ================= */}
         {step === 'regions' && (
           <>
@@ -340,11 +484,42 @@ export default function ConsultarSinodais() {
           </>
         )}
 
-        {/* ================= STEP 2: SINODAIS LIST ================= */}
-        {step === 'sinodais_list' && selectedRegiao && (
+        {/* ================= STEP 1B: STATES GRID ================= */}
+        {step === 'states' && (
           <>
             <h1 className={styles.mainTitle}>CONFEDERAÇÕES SINODAIS</h1>
-            <h2 className={styles.subTitle}>Região {selectedRegiao.nome}</h2>
+            <h2 className={styles.subTitle}>Escolha um estado</h2>
+            {loading ? (
+              <p className={styles.loading}>Carregando estados...</p>
+            ) : error ? (
+              <p className={styles.error}>{error}</p>
+            ) : states.length === 0 ? (
+              <p className={styles.empty}>Nenhum estado com Federações/Sinodais cadastradas.</p>
+            ) : (
+              <div className={styles.regionsGrid}>
+                {states.map((uf) => (
+                  <button
+                    key={uf}
+                    className={styles.regionBtn}
+                    onClick={() => handleSelectState(uf)}
+                  >
+                    {stateNames[uf] || uf} ({uf})
+                  </button>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ================= STEP 2: SINODAIS LIST ================= */}
+        {step === 'sinodais_list' && (selectedRegiao || selectedState) && (
+          <>
+            <h1 className={styles.mainTitle}>CONFEDERAÇÕES SINODAIS</h1>
+            <h2 className={styles.subTitle}>
+              {searchType === 'regiao' 
+                ? `Região ${selectedRegiao?.nome}` 
+                : `Estado: ${stateNames[selectedState] || selectedState} (${selectedState})`}
+            </h2>
 
             {/* Statistics Card */}
             <div className={styles.statsCard}>
@@ -376,7 +551,11 @@ export default function ConsultarSinodais() {
             ) : error ? (
               <p className={styles.error}>{error}</p>
             ) : sinodais.length === 0 ? (
-              <p className={styles.empty}>Nenhuma Sinodal cadastrada para esta região.</p>
+              <p className={styles.empty}>
+                {searchType === 'regiao' 
+                  ? 'Nenhuma Sinodal cadastrada para esta região.' 
+                  : 'Nenhuma Sinodal cadastrada para este estado.'}
+              </p>
             ) : (
               <>
                 <div className={styles.searchBarContainer}>
