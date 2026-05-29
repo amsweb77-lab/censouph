@@ -38,20 +38,26 @@ export default function Menu() {
             Cadastros
           </h2>
           <div className={styles.list}>
-            {menuItems.cadastros.map((item, index) => (
-              <div
-                key={item.path}
-                className={styles.itemWrap}
-                style={{ animationDelay: `${index * 80}ms` }}
-              >
-                <ListItem
-                  label={item.label}
-                  path={item.path}
-                  onClick={() => navigate(item.path)}
-                  disabled={item.disabled}
-                />
-              </div>
-            ))}
+            {menuItems.cadastros.map((item, index) => {
+              const isDisabled = item.label === 'Cadastrar Sinodais'
+                ? user?.email !== 'amsweb77@gmail.com'
+                : item.disabled;
+
+              return (
+                <div
+                  key={item.path}
+                  className={styles.itemWrap}
+                  style={{ animationDelay: `${index * 80}ms` }}
+                >
+                  <ListItem
+                    label={item.label}
+                    path={item.path}
+                    onClick={() => navigate(item.path)}
+                    disabled={isDisabled}
+                  />
+                </div>
+              );
+            })}
           </div>
         </section>
       )}
