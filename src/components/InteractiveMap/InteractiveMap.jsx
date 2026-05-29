@@ -232,9 +232,7 @@ export default function InteractiveMap({ onRegionClick }) {
           {!loading && geojsonData ? (
             <MapContainer
               center={[-14.24, -54.5]} // Mathematically centered on Brazil's bounding box to prevent cutting Acre/Amazonas
-              zoom={3.8}
-              zoomSnap={0.1}
-              zoomDelta={0.1}
+              zoom={3}
               style={{ width: '100%', height: '100%' }}
               zoomControl={true}
               scrollWheelZoom={false}
