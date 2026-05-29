@@ -150,11 +150,11 @@ export default function ConsultarSinodais() {
     setError(null);
     try {
       const { data, error: err } = await supabase
-        .from('federacoes')
-        .select('estado');
+        .from('sinodais')
+        .select('uf');
       if (err) throw err;
       
-      const uniqueStates = Array.from(new Set(data.map(f => f.estado).filter(Boolean))).sort();
+      const uniqueStates = Array.from(new Set(data.map(s => s.uf).filter(Boolean))).sort();
       setStates(uniqueStates);
     } catch (err) {
       console.error('Erro ao carregar estados:', err);
@@ -171,38 +171,35 @@ export default function ConsultarSinodais() {
     setLoading(true);
     setError(null);
     try {
-      const { data: fedData, error: fedErr } = await supabase
-        .from('federacoes')
-        .select('sinodal_id')
-        .eq('estado', stateUf);
-      if (fedErr) throw fedErr;
+      // 1. Fetch Sinodais directly by UF
+      const { data: sData, error: sErr } = await supabase
+        .from('sinodais')
+        .select('*')
+        .eq('uf', stateUf)
+        .order('nome');
+      if (sErr) throw sErr;
+      const sinodaisData = sData || [];
 
-      const sinodalIds = Array.from(new Set(fedData.map(f => f.sinodal_id).filter(Boolean)));
-      
-      let sinodaisData = [];
+      // 2. Fetch stats for these Sinodais
       let fCount = 0;
       let uCount = 0;
       let sSum = 0;
 
-      if (sinodalIds.length > 0) {
-        const { data: sData, error: sErr } = await supabase
-          .from('sinodais')
-          .select('*')
-          .in('id', sinodalIds)
-          .order('nome');
-        if (sErr) throw sErr;
-        sinodaisData = sData || [];
+      const sinodalIds = sinodaisData.map(s => s.id);
 
+      if (sinodalIds.length > 0) {
+        // Fetch count of Federações under these Sinodais
         const { count: fedCount, error: fErr } = await supabase
           .from('federacoes')
           .select('id', { count: 'exact', head: true })
-          .eq('estado', stateUf);
+          .in('sinodal_id', sinodalIds);
         if (!fErr) fCount = fedCount || 0;
 
+        // Fetch UPHs and Sócios under these Federações
         const { data: fData } = await supabase
           .from('federacoes')
           .select('id')
-          .eq('estado', stateUf);
+          .in('sinodal_id', sinodalIds);
         const fIds = (fData || []).map(f => f.id);
 
         if (fIds.length > 0) {
