@@ -7,6 +7,7 @@ import BirthdayList from '../../components/BirthdayList/BirthdayList';
 import { MdClose, MdCake } from 'react-icons/md';
 import styles from './Home.module.css';
 import InteractiveMap from '../../components/InteractiveMap/InteractiveMap';
+import { FaWhatsapp } from 'react-icons/fa';
 
 const banners = [
   {
@@ -552,6 +553,16 @@ export default function Home() {
           </div>
         </div>
       )}
+      {/* Floating WhatsApp Button */}
+      <a
+        href="https://wa.me/5598987409175"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.whatsappFloat}
+        aria-label="Fale conosco no WhatsApp"
+      >
+        <FaWhatsapp />
+      </a>
 
     </div>
   );
